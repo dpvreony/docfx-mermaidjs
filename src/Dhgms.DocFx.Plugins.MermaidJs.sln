@@ -1,0 +1,33 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33205.214
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1D8CD427-F6FE-4177-9103-EBFB0354C0B8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dhgms.DocFx.MermaidJs.UnitTests", "Dhgms.DocFx.MermaidJs.UnitTests\Dhgms.DocFx.MermaidJs.UnitTests.csproj", "{AC67E4A9-81B3-4014-A6CA-99B4234DF18E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dhgms.DocFx.MermaidJs.Plugin", "Dhgms.DocFx.MermaidJs.Plugin\Dhgms.DocFx.MermaidJs.Plugin.csproj", "{C60B64E9-D9C0-4DA6-AC90-70F0A6911F48}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AC67E4A9-81B3-4014-A6CA-99B4234DF18E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC67E4A9-81B3-4014-A6CA-99B4234DF18E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC67E4A9-81B3-4014-A6CA-99B4234DF18E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC67E4A9-81B3-4014-A6CA-99B4234DF18E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C60B64E9-D9C0-4DA6-AC90-70F0A6911F48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C60B64E9-D9C0-4DA6-AC90-70F0A6911F48}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C60B64E9-D9C0-4DA6-AC90-70F0A6911F48}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C60B64E9-D9C0-4DA6-AC90-70F0A6911F48}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F39EF530-0C71-43A4-AED4-23A95E53BC2D}
+	EndGlobalSection
+EndGlobal
