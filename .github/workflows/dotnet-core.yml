@@ -38,37 +38,10 @@ jobs:
         distribution: 'temurin' # See 'Supported distributions' for available options
         java-version: '11'
 
-    - name: Install Windows SDK 10.0.16299
-      shell: pwsh
-      run: |
-        Invoke-WebRequest -Uri https://go.microsoft.com/fwlink/p/?linkid=864422 -OutFile winsdk.exe
-        $startInfo = New-Object System.Diagnostics.ProcessStartInfo
-        $startInfo.FileName = "winsdk.exe"
-        $startInfo.Arguments = "/norestart /quiet"
-        $process = New-Object System.Diagnostics.Process
-        $process.StartInfo = $startInfo
-        $process.Start()
-        $process.WaitForExit()
-
-    - name: Setup .NET Core 3.1
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 3.1.x
-
-    - name: Setup .NET 5
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 5.0.x
-
     - name: Install .NET 6
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.0.x
-
-    - name: Install DotNet workloads
-      shell: bash
-      run: |
-        dotnet workload install android ios tvos macos maui
 
     - name: Download SBOM
       shell: pwsh
@@ -117,11 +90,11 @@ jobs:
         dotnet list ${{ env.solutionpath }} package --vulnerable
         # TODO: pipe to text file, echo text file and error level fail build if not empty file?
 
-    - name: NPM package restore
-      run: |
-        pushd src\Whipstaff.Example.WebMvcApp\
-        npm install
-        popd
+    #- name: NPM package restore
+    #  run: |
+    #    pushd src\Whipstaff.Example.WebMvcApp\
+    #    npm install
+    #    popd
 
     - name: Run Sonar Scanner begin
       if: env.SONAR_TOKEN != '' && env.SONAR_PROJECT_KEY != '' && env.SONAR_ORGANISATION_KEY != ''
