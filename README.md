@@ -91,6 +91,18 @@ You can adjust the settings by viewing the detailed documentation.
 
 In your markdown files add a code block with a mermaid descriptor like so:
 
+````
+```mermaid
+graph TD;
+    A-->B;
+    A-->C;
+    B-->D;
+    C-->D;
+```
+````
+
+Then you can run the build and you should see the image output in place of the mermaid markdown syntax.
+
 ```mermaid
 graph TD;
     A-->B;
@@ -99,7 +111,6 @@ graph TD;
     C-->D;
 ```
 
-Then you can run the build and you should see the image output in place of the mermaid markdown syntax.
 
 ## Viewing the documentation
 
