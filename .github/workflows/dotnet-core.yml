@@ -17,10 +17,8 @@ jobs:
       DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
       DOTNET_NOLOGO: true
       DOTNET_GENERATE_ASPNET_CERTIFICATE: false
-      solutionpath: src/Whipstaff.sln
-      unittestprojectpath: src/Whipstaff.UnitTests/Whipstaff.UnitTests.csproj
-      inttestprojectpath: src/Whipstaff.IntegrationTests/Whipstaff.IntegrationTests.csproj
-      benchmarkprojectpath: src/Whipstaff.IntegrationTests/Whipstaff.Benchmarks.csproj
+      solutionpath: src/Dhgms.DocFx.MermaidJs.sln
+      unittestprojectpath: src/Dhgms.DocFx.MermaidJs.UnitTests/Whipstaff.UnitTests.csproj
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
@@ -167,19 +165,6 @@ jobs:
         $opencoverxmlpath = Get-ChildItem 'artifacts/unittestcoverage/**/*.xml' | Select-Object -First 1
         $unitTestCoverage = (Select-Xml -Path $opencoverxmlpath -XPath 'CoverageSession/Summary/@branchCoverage').Node.Value
         $coverageMessage = "Unit Test Coverage: $unitTestCoverage"
-        echo "::notice::$coverageMessage"
-        echo $coverageMessage >> $GITHUB_STEP_SUMMARY
-
-    # integration tests run after sonarscanner and unit test reporting so if the integration tests fail the report still uploads so we can see defects detected by sonarscanner and any unit test coverage issues.
-    - name: Run Integration Tests
-      run: |
-        dotnet test ${{ env.inttestprojectpath }} --configuration Release --no-build /bl:artifacts\\binlog\\inttest.binlog --nologo --logger GitHubActions --blame-hang-timeout 60000 --results-directory artifacts\inttestcoverage --collect:"XPlat Code Coverage" /p:CollectCoverage=true /p:DeterministicSourcePaths=false -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
-
-    - name: Report Integration Test Coverage
-      run: |
-        $opencoverxmlpath = Get-ChildItem 'artifacts/inttestcoverage/**/*.xml' | Select-Object -First 1
-        $intTestCoverage = (Select-Xml -Path $opencoverxmlpath -XPath 'CoverageSession/Summary/@branchCoverage').Node.Value
-        $coverageMessage = "Integration Test Coverage: $intTestCoverage"
         echo "::notice::$coverageMessage"
         echo $coverageMessage >> $GITHUB_STEP_SUMMARY
 
