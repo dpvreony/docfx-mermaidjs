@@ -18,7 +18,7 @@ jobs:
       DOTNET_NOLOGO: true
       DOTNET_GENERATE_ASPNET_CERTIFICATE: false
       solutionpath: src/Dhgms.DocFx.MermaidJs.sln
-      unittestprojectpath: src/Dhgms.DocFx.MermaidJs.UnitTests/Whipstaff.UnitTests.csproj
+      unittestprojectpath: src/Dhgms.DocFx.MermaidJs.UnitTests/Dhgms.DocFx.MermaidJs.UnitTests.csproj
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
