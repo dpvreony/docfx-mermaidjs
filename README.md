@@ -18,6 +18,7 @@ This DocFX MermaidJS plugin is a wrapper around the mermaid-cli NPM package. It 
 * https://mermaid.js.org/
 * https://github.com/mermaid-js/mermaid-cli
 * https://github.com/mermaid-js/mermaid
+* https://github.com/dpvreony/article-statiq-mermaid
 * https://github.com/KevReed/DocFx.Plugins.PlantUml
 
 ## Getting Started
