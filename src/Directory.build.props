@@ -1,16 +1,16 @@
 <Project>
   <PropertyGroup>
     <Company>DPVreony and Contributors</Company>
-    <StartYear>2016</StartYear>
+    <StartYear>2022</StartYear>
     <Copyright>© $(StartYear)-$([System.DateTime]::Now.Year) $(Company)</Copyright>
-    <Product>Whipstaff ($(TargetFramework))</Product>
+    <Product>DocFX MermaidJS ($(TargetFramework))</Product>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Authors>dpvreony</Authors>
     <Owners>dpvreony</Owners>
-    <PackageTags>NET core reusable web helpers</PackageTags>
-    <PackageReleaseNotes>https://github.com/dpvreony/Dhgms.AspNetCoreContrib/releases</PackageReleaseNotes>
+    <PackageTags>MermaidJS Plugin for DocFX</PackageTags>
+    <PackageReleaseNotes>https://github.com/dpvreony/docfx-mermaidjs/releases</PackageReleaseNotes>
     <PackageReadmeFile>readme.md</PackageReadmeFile>
-    <RepositoryUrl>https://github.com/dpvreony/Dhgms.AspNetCoreContrib</RepositoryUrl>
+    <RepositoryUrl>https://github.com/dpvreony/docfx-mermaidjs</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)analyzers.ruleset</CodeAnalysisRuleSet>
@@ -31,7 +31,6 @@
 	<WarningsAsErrors />
 	<Nullable>enable</Nullable>
 	<Packable>false</Packable>
-	<Packable Condition="$(IsTestProject) != 'true' and $(MSBuildProjectName.StartsWith('Whipstaff.'))">false</Packable>
     <LangVersion>10.0</LangVersion>
   </PropertyGroup>
 
