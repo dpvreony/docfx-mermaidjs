@@ -6,7 +6,11 @@ To provide a plugin to convert MermaidJS notations to diagrams during the build 
 
 ## Introduction
 
-This DocFX MermaidJS plugin is a wrapper around the mermaid-cli NPM package
+This DocFX MermaidJS plugin is a wrapper around the mermaid-cli NPM package. It is aimed at doing build time generation of the mermaid diagram so:
+
+* The syntax can be validated at build time.
+* The image is only built once.
+* The image can be embedded in a pdf.
 
 ## Credits
 
@@ -51,9 +55,9 @@ pushd docfx_project && npm install && popd
 
 Add a nuget package reference to "Dhgms.DocFX.Mermaid.Plugin" in your docfx_project
 
-Update your docfx.json to include the template.
+Update your docfx.json to include the template. This assumes you are using the default templates for the process. You need to put this plugin BEFORE your output template.
 
-For HTML output
+For HTML output:
 
 ```json
     "build": {
@@ -64,7 +68,7 @@ For HTML output
     }
 ```
 
-For PDF output
+For PDF output:
 
 ```json
     "pdf": {
@@ -75,13 +79,27 @@ For PDF output
     }
 ```
 
-### Adding a diagram
-
 By default the plugin has the following behaviour:
 
 * Uses inline emdedding in the HTML
 * Creates png images
 * Runs the mermaid-cli externally
+
+You can adjust the settings by viewing the detailed documentation.
+
+### Adding a diagram
+
+In your markdown files add a code block with a mermaid descriptor like so:
+
+```mermaid
+graph TD;
+    A-->B;
+    A-->C;
+    B-->D;
+    C-->D;
+```
+
+Then you can run the build and you should see the image output in place of the mermaid markdown syntax.
 
 ## Viewing the documentation
 
