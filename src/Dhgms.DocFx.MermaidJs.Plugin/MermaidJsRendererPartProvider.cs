@@ -8,9 +8,13 @@ using Microsoft.DocAsCode.Dfm;
 
 namespace Dhgms.DocFx.MermaidJs.Plugin
 {
+    /// <summary>
+    /// Part Provider for registering the MermaidJS Part Renderer into DocFX.
+    /// </summary>
     [Export(typeof(IDfmCustomizedRendererPartProvider))]
     public sealed class MermaidJsRendererPartProvider : IDfmCustomizedRendererPartProvider
     {
+        /// <inheritdoc />
         public IEnumerable<IDfmCustomizedRendererPart> CreateParts(IReadOnlyDictionary<string, object> parameters)
         {
             var settings = new MermaidJsRendererSettings(parameters);

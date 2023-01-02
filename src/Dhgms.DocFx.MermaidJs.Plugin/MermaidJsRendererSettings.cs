@@ -8,8 +8,15 @@ using Microsoft.DocAsCode.Common;
 
 namespace Dhgms.DocFx.MermaidJs.Plugin
 {
+    /// <summary>
+    /// Configuration Settings for the MermaidJS integration.
+    /// </summary>
     public sealed class MermaidJsRendererSettings
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MermaidJsRendererSettings"/> class.
+        /// </summary>
+        /// <param name="parameters">Collection of parameters from the DocFX process.</param>
         public MermaidJsRendererSettings(IReadOnlyDictionary<string, object> parameters)
         {
             Logger.LogInfo("checking keys", typeof(MermaidJsRendererPart).ToString());
@@ -22,8 +29,14 @@ namespace Dhgms.DocFx.MermaidJs.Plugin
             InlineDiagrams = GetValueOrDefault(parameters, "mermaidJs.inlineDiagrams", true);
         }
 
+        /// <summary>
+        /// Gets the output format to use.
+        /// </summary>
         public string OutputFormat { get; }
 
+        /// <summary>
+        /// Gets a value indicating whether to inline the diagrams.
+        /// </summary>
         public bool InlineDiagrams { get; }
 
         private static T GetValueOrDefault<T>(IReadOnlyDictionary<string, object> collection, string key, T defaultValue)
