@@ -14,7 +14,14 @@
     <PackageReference Include="Microsoft.Composition" Version="1.0.31" PrivateAssets="all" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Include="bin\$(Configuration)\net48\*.*" PackagePath="template\mermaidjs\plugin" Pack="true" />
-  </ItemGroup>
+  <PropertyGroup>
+    <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);CustomContentInPackage</TargetsForTfmSpecificContentInPackage>
+  </PropertyGroup>
+
+  <Target Name="CustomContentInPackage">
+    <ItemGroup>
+      <TfmSpecificPackageFile Include="bin\$(Configuration)\net48\*.*" PackagePath="template\mermaidjs\plugin">
+      </TfmSpecificPackageFile>
+    </ItemGroup>
+  </Target>
 </Project>
