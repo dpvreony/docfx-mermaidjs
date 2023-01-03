@@ -1,0 +1,6 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <DocTemplate Condition="'$(DocTemplate)' == ''">default</DocTemplate>
+        <DocTemplate>$(MSBuildThisFileDirectory)..\template\mermaidjs,$(DocTemplate)</DocTemplate>
+    </PropertyGroup>
+</Project>
