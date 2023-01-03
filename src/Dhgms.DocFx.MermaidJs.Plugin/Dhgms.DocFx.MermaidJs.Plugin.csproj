@@ -20,8 +20,8 @@
 
   <Target Name="CustomContentInPackage">
     <ItemGroup>
-      <TfmSpecificPackageFile Include="bin\$(Configuration)\net48\*.*" PackagePath="template\mermaidjs\plugin">
-      </TfmSpecificPackageFile>
+      <TfmSpecificPackageFile Include="bin\$(Configuration)\net48\*.*" PackagePath="template\mermaidjs\plugins" />
+      <TfmSpecificPackageFile src="Dhgms.DocFx.MermaidJs.Plugin.targets" target="build\" />
     </ItemGroup>
   </Target>
 </Project>
