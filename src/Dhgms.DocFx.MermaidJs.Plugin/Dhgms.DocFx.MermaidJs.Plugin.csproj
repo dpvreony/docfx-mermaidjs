@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <DevelopmentDependency>true</DevelopmentDependency>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <NoWarn>$(NoWarn);NU5128;NU5100</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.DocAsCode.Dfm" Version="2.59.3" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.Composition" Version="1.0.31" PrivateAssets="all" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);CustomContentInPackage</TargetsForTfmSpecificContentInPackage>
+  </PropertyGroup>
+
+  <Target Name="CustomContentInPackage">
+    <ItemGroup>
+      <TfmSpecificPackageFile Include="bin\$(Configuration)\net48\*.*" PackagePath="template\mermaidjs\plugin">
+      </TfmSpecificPackageFile>
+    </ItemGroup>
+  </Target>
+</Project>
