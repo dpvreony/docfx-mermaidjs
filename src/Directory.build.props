@@ -7,7 +7,8 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <Authors>dpvreony</Authors>
     <Owners>dpvreony</Owners>
-    <PackageTags>MermaidJS Plugin for DocFX</PackageTags>
+    <PackageTags>MermaidJS Plugin DocFX</PackageTags>
+    <Description>MermaidJS Plugin for DocFX</Description>
     <PackageReleaseNotes>https://github.com/dpvreony/docfx-mermaidjs/releases</PackageReleaseNotes>
     <PackageReadmeFile>readme.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/dpvreony/docfx-mermaidjs</RepositoryUrl>
