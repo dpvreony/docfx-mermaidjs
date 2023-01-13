@@ -4,6 +4,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using Microsoft.DocAsCode.Common;
@@ -37,12 +38,20 @@ namespace Dhgms.DocFx.MermaidJs.Plugin
         /// <inheritdoc/>
         public override bool Match(IMarkdownRenderer renderer, MarkdownCodeBlockToken token, MarkdownBlockContext context)
         {
+            ArgumentNullException.ThrowIfNull(renderer);
+            ArgumentNullException.ThrowIfNull(token);
+            ArgumentNullException.ThrowIfNull(context);
+
             return token.Lang == "mermaid";
         }
 
         /// <inheritdoc/>
         public override StringBuffer Render(IMarkdownRenderer renderer, MarkdownCodeBlockToken token, MarkdownBlockContext context)
         {
+            ArgumentNullException.ThrowIfNull(renderer);
+            ArgumentNullException.ThrowIfNull(token);
+            ArgumentNullException.ThrowIfNull(context);
+
             if (_settings.InlineDiagrams)
             {
                 return RenderInlineDiagram(
@@ -55,6 +64,42 @@ namespace Dhgms.DocFx.MermaidJs.Plugin
                 renderer,
                 token,
                 context);
+        }
+
+        private static void RunProcessWithTempFile(string inputFileName, string command, string outputFileName, string rootPath)
+        {
+            var args = $"-o \"{outputFileName}\" -i \"{inputFileName}\"";
+
+            Logger.LogInfo($"Input Filename: {inputFileName}");
+            Logger.LogInfo($"Output Filename: {outputFileName}");
+            Logger.LogInfo($"Command: {command}");
+            Logger.LogInfo($"Args: {args}");
+
+            var startInfo = new ProcessStartInfo(command, args)
+            {
+                WorkingDirectory = rootPath,
+                UseShellExecute = false,
+            };
+
+            using (var process = new Process
+                   {
+                       StartInfo = startInfo,
+                   })
+            {
+                if (!process.Start())
+                {
+                    Logger.LogError($"mermaid-cli failed to start");
+                    return;
+                }
+
+                process.WaitForExit();
+
+                var exitCode = process.ExitCode;
+                if (exitCode != 0)
+                {
+                    Logger.LogError($"mermaid-cli process exit code is: {exitCode}");
+                }
+            }
         }
 
         private StringBuffer RenderExternalFile(IMarkdownRenderer renderer, MarkdownCodeBlockToken token, MarkdownBlockContext context)
@@ -119,11 +164,16 @@ namespace Dhgms.DocFx.MermaidJs.Plugin
 
             if (!File.Exists(command))
             {
-                Logger.LogError("markdown requires NPM and mermaid-cli", file: sourceInfo.File, line: sourceInfo.LineNumber.ToString());
+                Logger.LogError("markdown requires NPM and mermaid-cli", file: sourceInfo.File, line: sourceInfo.LineNumber.ToString(NumberFormatInfo.InvariantInfo));
                 return;
             }
 
             var outputPath = Path.GetDirectoryName(sourceInfo.File);
+            if (string.IsNullOrWhiteSpace(outputPath))
+            {
+                Logger.LogError("Failed to get output path from sourceInfo", file: sourceInfo.File, line: sourceInfo.LineNumber.ToString(NumberFormatInfo.InvariantInfo));
+                return;
+            }
 
             // this is taking the input folder, the output folder
             var outputFilename = Path.Combine(
@@ -136,6 +186,11 @@ namespace Dhgms.DocFx.MermaidJs.Plugin
             outputFilename = Path.GetFullPath(outputFilename);
 
             var targetDir = Path.GetDirectoryName(outputFilename);
+            if (string.IsNullOrWhiteSpace(targetDir))
+            {
+                Logger.LogError("Failed to get targetDir from outputFilename", file: sourceInfo.File, line: sourceInfo.LineNumber.ToString(NumberFormatInfo.InvariantInfo));
+                return;
+            }
 
             if (!Directory.Exists(targetDir))
             {
@@ -152,41 +207,6 @@ namespace Dhgms.DocFx.MermaidJs.Plugin
             {
                 // TODO: inline the diagram
                 // TODO: delete the output file
-            }
-        }
-
-        private void RunProcessWithTempFile(string inputFileName, string command, string outputFileName, string rootPath)
-        {
-            var args = $"-o \"{outputFileName}\" -i \"{inputFileName}\"";
-
-            Logger.LogInfo($"Input Filename: {inputFileName}");
-            Logger.LogInfo($"Output Filename: {outputFileName}");
-            Logger.LogInfo($"Command: {command}");
-            Logger.LogInfo($"Args: {args}");
-
-            var startInfo = new ProcessStartInfo(command, args)
-            {
-                WorkingDirectory = rootPath,
-                UseShellExecute = false,
-            };
-
-            var process = new Process
-            {
-                StartInfo = startInfo,
-            };
-
-            if (!process.Start())
-            {
-                Logger.LogError($"mermaid-cli failed to start");
-                return;
-            }
-
-            process.WaitForExit();
-
-            var exitCode = process.ExitCode;
-            if (exitCode != 0)
-            {
-                Logger.LogError($"mermaid-cli process exit code is: {exitCode}");
             }
         }
     }
