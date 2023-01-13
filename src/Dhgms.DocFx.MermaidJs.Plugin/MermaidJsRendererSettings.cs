@@ -19,6 +19,8 @@ namespace Dhgms.DocFx.MermaidJs.Plugin
         /// <param name="parameters">Collection of parameters from the DocFX process.</param>
         public MermaidJsRendererSettings(IReadOnlyDictionary<string, object> parameters)
         {
+            ArgumentNullException.ThrowIfNull(parameters);
+
             Logger.LogInfo("checking keys", typeof(MermaidJsRendererPart).ToString());
             foreach (KeyValuePair<string, object> keyValuePair in parameters)
             {
@@ -43,12 +45,14 @@ namespace Dhgms.DocFx.MermaidJs.Plugin
         {
             try
             {
-                if (collection.TryGetValue(key, out object value))
+                if (collection.TryGetValue(key, out var value))
                 {
                     return (T)value;
                 }
             }
+#pragma warning disable CA1031
             catch (Exception e)
+#pragma warning restore CA1031
             {
                 Logger.LogWarning($"Failed to read setting: \"{key}\" reason: \"{e.Message}\"");
             }
