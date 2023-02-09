@@ -11,7 +11,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.DocAsCode.Dfm" Version="2.61.0" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.Composition" Version="1.0.31" PrivateAssets="all" />
+    <PackageReference Include="System.Composition" Version="7.0.0" PrivateAssets="all" />
   </ItemGroup>
 
   <PropertyGroup>
@@ -20,7 +20,7 @@
 
   <Target Name="CustomContentInPackage">
     <ItemGroup>
-      <TfmSpecificPackageFile Include="bin\$(Configuration)\net48\*.*" PackagePath="template\mermaidjs\plugins" />
+      <TfmSpecificPackageFile Include="bin\$(Configuration)\net6\*.*" PackagePath="template\mermaidjs\plugins" />
       <TfmSpecificPackageFile src="Dhgms.DocFx.MermaidJs.Plugin.targets" target="build\" />
     </ItemGroup>
   </Target>

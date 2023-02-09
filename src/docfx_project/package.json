@@ -1,0 +1,7 @@
+{
+    "name": "dpvreony-website",
+    "version": "1.0.0",
+    "devDependencies": {
+        "@mermaid-js/mermaid-cli": "9.3.0"
+    }
+}

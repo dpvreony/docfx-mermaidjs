@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LogLevel>Debug</LogLevel>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Dhgms.DocFx.MermaidJs.Plugin\Dhgms.DocFx.MermaidJs.Plugin.csproj" />
+  </ItemGroup>
+
+  <Target Name="CopyMermaidJsPlugin" AfterTargets="Build" BeforeTargets="RunDocFxGeneration">
+    <ItemGroup>
+      <MySourceFiles Include="..\Dhgms.DocFx.MermaidJs.Plugin\bin\$(Configuration)\net6.0\*.*" />
+    </ItemGroup>
+    <Copy DestinationFolder="template\plugins\mermaidjs" SourceFiles="@(MySourceFiles)" />
+  </Target>
+
+  <Target Name="RunDocFxGeneration" AfterTargets="Build">
+    <Exec Command="dotnet docfx docfx.json --loglevel verbose" ConsoleToMSBuild="true" LogStandardErrorAsError="true" />
+  </Target>
+</Project>
