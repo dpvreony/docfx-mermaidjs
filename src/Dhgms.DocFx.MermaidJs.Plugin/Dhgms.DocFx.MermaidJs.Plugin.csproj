@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.DocAsCode.Dfm" Version="2.61.0" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.DocAsCode.MarkdigEngine.Extensions" Version="2.61.0" />
     <PackageReference Include="System.Composition" Version="7.0.0" PrivateAssets="all" />
   </ItemGroup>
 
