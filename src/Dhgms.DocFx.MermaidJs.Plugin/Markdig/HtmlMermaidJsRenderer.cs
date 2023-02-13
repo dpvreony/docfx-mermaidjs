@@ -15,6 +15,9 @@ using Microsoft.DocAsCode.MarkdigEngine.Extensions;
 
 namespace Dhgms.DocFx.MermaidJs.Plugin.Markdig
 {
+    /// <summary>
+    /// HTML renderer for MermaidJS Code Blocks.
+    /// </summary>
     public sealed class HtmlMermaidJsRenderer : HtmlObjectRenderer<CodeBlock>
     {
         private readonly MarkdownContext _markdownContext;
@@ -23,12 +26,15 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Markdig
         /// <summary>
         /// Initializes a new instance of the <see cref="HtmlMermaidJsRenderer"/> class.
         /// </summary>
-        /// <param name="markdownContext"></param>
+        /// <param name="markdownContext">DocFX Markdown context.</param>
         public HtmlMermaidJsRenderer(MarkdownContext markdownContext)
         {
             _markdownContext = markdownContext;
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether to output attributes on a HTML PRE block.
+        /// </summary>
         public bool OutputAttributesOnPre { get; set; }
 
         /// <summary>
