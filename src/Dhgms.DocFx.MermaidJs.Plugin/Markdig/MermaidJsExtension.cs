@@ -31,7 +31,7 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Markdig
         {
             ArgumentNullException.ThrowIfNull(pipeline);
 
-            pipeline.BlockParsers.AddIfNotAlready<MermaidJsBlockParser>();
+            // pipeline.BlockParsers.AddIfNotAlready<MermaidJsBlockParser>();
         }
 
         /// <inheritdoc/>

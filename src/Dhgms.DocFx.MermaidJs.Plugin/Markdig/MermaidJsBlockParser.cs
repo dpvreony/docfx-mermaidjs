@@ -4,6 +4,9 @@
 
 namespace Dhgms.DocFx.MermaidJs.Plugin.Markdig
 {
+    /// <summary>
+    /// Block parser for Mermaid diagrams.
+    /// </summary>
     public class MermaidJsBlockParser
     {
     }
