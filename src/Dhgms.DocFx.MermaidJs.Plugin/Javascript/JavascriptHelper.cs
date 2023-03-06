@@ -8,6 +8,7 @@ using Microsoft.ClearScript;
 using Microsoft.ClearScript.JavaScript;
 using Microsoft.ClearScript.V8;
 using Microsoft.Extensions.Logging;
+using static Microsoft.ClearScript.V8.V8CpuProfile;
 
 namespace Dhgms.DocFx.MermaidJs.Plugin.Javascript
 {
@@ -39,29 +40,20 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Javascript
                 _logger.LogDebug("Starting v8 process");
 #pragma warning restore CA1848 // Use the LoggerMessage delegates
 
-                v8.DocumentSettings.AccessFlags = DocumentAccessFlags.None;
-                var code = File.ReadAllText(
-                    "C:\\GitHub\\dpvreony\\docfx-mermaidjs\\src\\Dhgms.DocFx.MermaidJs.Plugin\\node_modules\\mermaid\\dist\\mermaid.js");
+                var documentSettings = v8.DocumentSettings;
 
-                v8.Execute(new DocumentInfo() { Category = ModuleCategory.CommonJS }, code);
+                documentSettings.SearchPath = "C:\\GitHub\\dpvreony\\docfx-mermaidjs\\src\\Dhgms.DocFx.MermaidJs.Plugin\\node_modules\\mermaid\\dist\\";
+                documentSettings.AccessFlags = DocumentAccessFlags.EnableFileLoading;
 
                 // see https://mermaid.js.org/config/usage.html#api-usage
                 var sb = new System.Text.StringBuilder(495);
-                _ = sb.AppendLine(@"<script type=""module"">");
-                _ = sb.AppendLine(@"  import mermaid from './mermaid.mjs';");
-                _ = sb.AppendLine(@"  mermaid.mermaidAPI.initialize({ startOnLoad: false });");
-                _ = sb.AppendLine(@"  $(async function () {");
-                _ = sb.AppendLine(@"    // Example of using the API var");
-                _ = sb.AppendLine(@"    element = document.querySelector('#graphDiv');");
-                _ = sb.AppendLine(@"    const insertSvg = function (svgCode, bindFunctions) {");
-                _ = sb.AppendLine(@"      element.innerHTML = svgCode;");
-                _ = sb.AppendLine(@"    };");
-                _ = sb.AppendLine(@"    const graphDefinition = 'graph TB\na-->b';");
-                _ = sb.AppendLine(@"    const graph = await mermaid.mermaidAPI.render('graphDiv', graphDefinition, insertSvg);");
-                _ = sb.AppendLine(@"  });");
-                _ = sb.AppendLine(@"</script>");
 
-                var result = v8.ExecuteCommand(sb.ToString());
+                // next step is https://github.com/microsoft/ClearScript/issues/143#issuecomment-557729084 to preload the module.
+                _ = sb.AppendLine(@"import mermaid from 'mermaid.esm.mjs';");
+                _ = sb.AppendLine(@"mermaid.initialize({ startOnLoad: false });");
+                _ = sb.AppendLine(@"const { svg } = await mermaid.render('graphDiv', 'A --> B');");
+
+                v8.Execute(new DocumentInfo() { Category = ModuleCategory.Standard }, sb.ToString());
             }
         }
     }
