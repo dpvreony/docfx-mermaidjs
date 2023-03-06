@@ -39,13 +39,13 @@
       ]
     },
     "microsoft.cst.applicationinspector.cli": {
-      "version": "1.6.27",
+      "version": "1.7.4",
       "commands": [
         "appinspector"
       ]
     },
     "dotnet-project-licenses": {
-      "version": "2.6.0",
+      "version": "2.7.0",
       "commands": [
         "dotnet-project-licenses"
       ]
