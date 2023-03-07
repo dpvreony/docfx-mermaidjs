@@ -4,6 +4,7 @@
 
 using System;
 using System.IO;
+using System.Threading.Tasks;
 using Microsoft.ClearScript;
 using Microsoft.ClearScript.JavaScript;
 using Microsoft.ClearScript.V8;
@@ -42,7 +43,7 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Javascript
 
                 var documentSettings = v8.DocumentSettings;
 
-                documentSettings.SearchPath = "C:\\GitHub\\dpvreony\\docfx-mermaidjs\\src\\Dhgms.DocFx.MermaidJs.Plugin\\node_modules\\mermaid\\dist\\";
+                documentSettings.SearchPath = "F:\\github\\dpvreony\\docfx-mermaidjs\\src\\Dhgms.DocFx.MermaidJs.Plugin\\node_modules\\mermaid\\dist\\";
                 documentSettings.AccessFlags = DocumentAccessFlags.EnableFileLoading;
 
                 // see https://mermaid.js.org/config/usage.html#api-usage
@@ -51,9 +52,12 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Javascript
                 // next step is https://github.com/microsoft/ClearScript/issues/143#issuecomment-557729084 to preload the module.
                 _ = sb.AppendLine(@"import mermaid from 'mermaid.esm.mjs';");
                 _ = sb.AppendLine(@"mermaid.initialize({ startOnLoad: false });");
-                _ = sb.AppendLine(@"const { svg } = await mermaid.render('graphDiv', 'A --> B');");
+                _ = sb.AppendLine(@"mermaid;");
 
-                v8.Execute(new DocumentInfo() { Category = ModuleCategory.Standard }, sb.ToString());
+                // _ = sb.AppendLine(@"export const svg = await mermaid.render('graphDiv', 'A --> B');");
+                dynamic mermaid = v8.Evaluate(new DocumentInfo() { Category = ModuleCategory.Standard }, sb.ToString());
+                var renderTask = (mermaid.render("graphDiv", "graph TB\na-->b") as object).ToTask();
+                var svg = renderTask.Result;
             }
         }
     }
