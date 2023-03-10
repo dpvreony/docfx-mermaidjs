@@ -10,7 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 
-namespace Dhgms.DocFx.MermaidJs.Plugin.HttpServer.wwwroot
+namespace Dhgms.DocFx.MermaidJs.Plugin.HttpServer
 {
     public static class MermaidHttpServerFactory
     {
