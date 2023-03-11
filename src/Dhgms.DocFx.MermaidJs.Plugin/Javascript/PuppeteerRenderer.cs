@@ -9,7 +9,7 @@ using PuppeteerSharp;
 namespace Dhgms.DocFx.MermaidJs.Plugin.Javascript
 {
     /// <summary>
-    /// Test renderer using cefsharp.dom
+    /// Test renderer using Puppeteer Sharp.
     /// </summary>
     public sealed class PuppeteerRenderer
     {
@@ -24,6 +24,7 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Javascript
             {
                 await using (var page = await browser.NewPageAsync())
                 {
+                    // TODO: add the event source generation.
                     _ = page.SetRequestInterceptionAsync(true);
                     page.Request += PageOnRequest;
 
