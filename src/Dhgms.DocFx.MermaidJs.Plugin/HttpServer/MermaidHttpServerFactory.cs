@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿// Copyright (c) 2022 DHGMS Solutions and Contributors. All rights reserved.
+// This file is licensed to you under the MIT license.
+// See the LICENSE file in the project root for full license information.
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
@@ -47,8 +46,8 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.HttpServer
         private static void ConfigureServices(WebHostBuilderContext webHostBuilderContext, IServiceCollection serviceCollection)
         {
             var embeddedProvider = new EmbeddedFileProvider(
-                typeof(MermaidHttpServer).Assembly,
-                typeof(MermaidHttpServer).Namespace + ".wwwroot");
+                typeof(MermaidHttpServerFactory).Assembly,
+                typeof(MermaidHttpServerFactory).Namespace + ".wwwroot");
             serviceCollection.AddSingleton<IFileProvider>(embeddedProvider);
         }
 

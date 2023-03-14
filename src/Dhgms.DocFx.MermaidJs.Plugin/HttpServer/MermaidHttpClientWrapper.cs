@@ -33,7 +33,7 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.HttpServer
             {
                 var nameValueCollection = new List<KeyValuePair<string, string>>
                 {
-                    new ("markdown", diagram),
+                    new("markdown", diagram),
                 };
 
                 var content = new FormUrlEncodedContent(nameValueCollection);

@@ -2,9 +2,12 @@
 // This file is licensed to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+#if TBC
+
 using System;
 using System.Net;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using PuppeteerSharp;
 using ReactiveMarbles.ObservableEvents;
 
@@ -15,6 +18,17 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Javascript
     /// </summary>
     public sealed class PuppeteerRenderer
     {
+        private readonly ILogger<PuppeteerRenderer> _logger;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PuppeteerRenderer"/> class.
+        /// </summary>
+        /// <param name="logger">Logging framework instance.</param>
+        public PuppeteerRenderer(ILogger<PuppeteerRenderer> logger)
+        {
+            _logger = logger;
+        }
+
         public async Task Render()
         {
             using (var browserFetcher = new BrowserFetcher())
@@ -26,11 +40,12 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Javascript
             {
                 await using (var page = await browser.NewPageAsync())
                 {
-                    // TODO: add the event source generation.
                     _ = page.SetRequestInterceptionAsync(true);
-                    page.Events().Request.Subscribe(x => OnRequest(x));
 
-                    _ = page.SetContentAsync("<html></html>");
+                    using (var disposableSubscription = page.Events().Request.Subscribe(x => OnRequest(x)))
+                    {
+                        _ = page.A();
+                    }
                 }
             }
         }
@@ -45,3 +60,5 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Javascript
         }
     }
 }
+
+#endif
