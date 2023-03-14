@@ -2,9 +2,11 @@
 // This file is licensed to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+using System;
 using System.Net;
 using System.Threading.Tasks;
 using PuppeteerSharp;
+using ReactiveMarbles.ObservableEvents;
 
 namespace Dhgms.DocFx.MermaidJs.Plugin.Javascript
 {
@@ -26,14 +28,14 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Javascript
                 {
                     // TODO: add the event source generation.
                     _ = page.SetRequestInterceptionAsync(true);
-                    page.Request += PageOnRequest;
+                    page.Events().Request.Subscribe(x => OnRequest(x));
 
                     _ = page.SetContentAsync("<html></html>");
                 }
             }
         }
 
-        private void PageOnRequest(object? sender, RequestEventArgs e)
+        private void OnRequest(RequestEventArgs e)
         {
             var request = e.Request;
 
