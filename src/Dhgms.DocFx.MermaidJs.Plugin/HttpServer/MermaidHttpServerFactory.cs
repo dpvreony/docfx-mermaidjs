@@ -11,8 +11,16 @@ using Microsoft.Extensions.Logging;
 
 namespace Dhgms.DocFx.MermaidJs.Plugin.HttpServer
 {
+    /// <summary>
+    /// Factory for the Mermaid in memory HTTP server.
+    /// </summary>
     public static class MermaidHttpServerFactory
     {
+        /// <summary>
+        /// Gets the In Memory Test Server.
+        /// </summary>
+        /// <param name="loggerFactory">Logging Factory.</param>
+        /// <returns>In memory HTTP server instance.</returns>
         public static TestServer GetTestServer(ILoggerFactory loggerFactory)
         {
             var builder = GetWebHostBuilder(loggerFactory);
@@ -48,12 +56,12 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.HttpServer
             var embeddedProvider = new EmbeddedFileProvider(
                 typeof(MermaidHttpServerFactory).Assembly,
                 typeof(MermaidHttpServerFactory).Namespace + ".wwwroot");
-            serviceCollection.AddSingleton<IFileProvider>(embeddedProvider);
+            _ = serviceCollection.AddSingleton<IFileProvider>(embeddedProvider);
         }
 
         private static void ConfigureLogging(ILoggingBuilder loggingBuilder, ILoggerFactory loggerFactory)
         {
-            loggingBuilder.Services.AddSingleton(loggerFactory);
+            _ = loggingBuilder.Services.AddSingleton(loggerFactory);
         }
     }
 }
