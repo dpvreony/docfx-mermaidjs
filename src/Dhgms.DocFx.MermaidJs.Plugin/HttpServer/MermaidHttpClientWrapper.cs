@@ -2,6 +2,7 @@
 // This file is licensed to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+#if TBC
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -70,3 +71,4 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.HttpServer
         }
     }
 }
+#endif

@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2022 DHGMS Solutions and Contributors. All rights reserved.
+// Copyright (c) 2022 DHGMS Solutions and Contributors. All rights reserved.
 // This file is licensed to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
@@ -14,51 +14,108 @@ using Microsoft.Playwright;
 
 namespace Dhgms.DocFx.MermaidJs.Plugin.Javascript
 {
+    /// <summary>
+    /// Markdown renderer using Playwright.
+    /// </summary>
     public sealed class PlaywrightRenderer
     {
         private readonly TestServer _mermaidHttpServerFactory;
 
-        public PlaywrightRenderer(MermaidHttpClientWrapper mermaidHttpClientWrapper, ILoggerFactory loggerFactory)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PlaywrightRenderer"/> class.
+        /// </summary>
+        /// <param name="loggerFactory">Logging framework instance.</param>
+        public PlaywrightRenderer(ILoggerFactory loggerFactory)
         {
             _mermaidHttpServerFactory = MermaidHttpServerFactory.GetTestServer(loggerFactory);
         }
 
-        public async Task Render(string diagram)
+        /// <summary>
+        /// Gets the SVG for the Mermaid Diagram.
+        /// </summary>
+        /// <param name="diagram">Diagram markdown to convert.</param>
+        /// <returns>SVG diagram.</returns>
+        public async Task<string?> GetSvg(string diagram)
         {
-            using var playwright = await Playwright.CreateAsync();
-            await using var browser = await playwright.Chromium.LaunchAsync(new() { Headless = false });
-            var page = await browser.NewPageAsync();
-            await page.RouteAsync("*", Handler);
-            var apiRequest = page.APIRequest;
-            var data = new Dictionary<string, object> { { "diagram", diagram } };
-
-            var response = await apiRequest.PostAsync("/mermaid", new APIRequestContextOptions { DataObject = data });
-        }
-
-        private void Handler(IRoute route)
-        {
-            using (var client = _mermaidHttpServerFactory.CreateClient())
+            using (var playwright = await Playwright.CreateAsync()
+                .ConfigureAwait(false))
+            await using (var browser = await playwright.Chromium.LaunchAsync(new() { Headless = true }))
             {
-                var request = GetRequestFromRoute(route);
-                var response = client.Send(request);
+                var page = await browser.NewPageAsync()
+                    .ConfigureAwait(false);
 
-                var routeFulfillOptions = new RouteFulfillOptions
-                {
-                    Status = (int)response.StatusCode,
-                    // TODO: async handling
-                    Body = response.Content.ReadAsStringAsync().Result,
-                };
+                await page.RouteAsync(
+                        "https://localhost/mermaid.html",
+                        route => MermaidPostHandler(route, diagram))
+                    .ConfigureAwait(false);
 
-                if (response.Content.Headers.ContentType != null)
+                await page.RouteAsync(
+                        "*",
+                        route => DefaultHandler(route))
+                    .ConfigureAwait(false);
+
+                var pageResponse = await page.GotoAsync("https://localhost/mermaid.html")
+                    .ConfigureAwait(false);
+
+                var mermaidElement = await page.QuerySelectorAsync("mermaid-element")
+                    .ConfigureAwait(false);
+
+                if (mermaidElement == null)
                 {
-                    routeFulfillOptions.ContentType = response.Content.Headers.ContentType.ToString();
+                    return null;
                 }
 
-                route.FulfillAsync().Wait();
+                var innerText = await mermaidElement.InnerTextAsync().ConfigureAwait(false);
+                return innerText;
             }
         }
 
-        private HttpRequestMessage GetRequestFromRoute(IRoute route)
+        private static HttpRequestMessage GetRequestFromRoute(IRoute route, string diagram)
+        {
+            var httpRequestMessage = new HttpRequestMessage();
+
+            var request = route.Request;
+
+            httpRequestMessage.RequestUri = new Uri(request.Url);
+
+            switch (request.Method)
+            {
+                case "DELETE":
+                    httpRequestMessage.Method = HttpMethod.Delete;
+                    break;
+                case "GET":
+                    httpRequestMessage.Method = HttpMethod.Get;
+                    break;
+                case "HEAD":
+                    httpRequestMessage.Method = HttpMethod.Head;
+                    break;
+                case "OPTIONS":
+                    httpRequestMessage.Method = HttpMethod.Options;
+                    break;
+                case "PATCH":
+                    httpRequestMessage.Method = HttpMethod.Patch;
+                    break;
+                case "POST":
+                    httpRequestMessage.Method = HttpMethod.Post;
+                    httpRequestMessage.Content = new FormUrlEncodedContent(new KeyValuePair<string, string>[]
+                    {
+                        new("diagram", diagram)
+                    });
+                    break;
+                case "PUT":
+                    httpRequestMessage.Method = HttpMethod.Put;
+                    break;
+                case "TRACE":
+                    httpRequestMessage.Method = HttpMethod.Trace;
+                    break;
+                default:
+                    throw new ArgumentException("Failed to map request HTTP method", nameof(route));
+            }
+
+            return httpRequestMessage;
+        }
+
+        private static HttpRequestMessage GetRequestFromRoute(IRoute route)
         {
             var httpRequestMessage = new HttpRequestMessage();
 
@@ -113,6 +170,54 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Javascript
             foreach (var requestHeader in requestHeaders)
             {
                 targetHeaders.Add(requestHeader.Key, requestHeader.Value);
+            }
+        }
+        
+        private async Task MermaidPostHandler(IRoute route, string diagram)
+        {
+            using (var client = _mermaidHttpServerFactory.CreateClient())
+            using (var request = GetRequestFromRoute(route, diagram))
+            {
+                var response = await client.SendAsync(request)
+                    .ConfigureAwait(false);
+
+                var routeFulfillOptions = new RouteFulfillOptions
+                {
+                    Status = (int)response.StatusCode,
+                    Body = await response.Content.ReadAsStringAsync().ConfigureAwait(false),
+                };
+
+                if (response.Content.Headers.ContentType != null)
+                {
+                    routeFulfillOptions.ContentType = response.Content.Headers.ContentType.ToString();
+                }
+
+                await route.FulfillAsync()
+                    .ConfigureAwait(false);
+            }
+        }
+
+        private async Task DefaultHandler(IRoute route)
+        {
+            using (var client = _mermaidHttpServerFactory.CreateClient())
+            using (var request = GetRequestFromRoute(route))
+            {
+                var response = await client.SendAsync(request)
+                    .ConfigureAwait(false);
+
+                var routeFulfillOptions = new RouteFulfillOptions
+                {
+                    Status = (int)response.StatusCode,
+                    Body = await response.Content.ReadAsStringAsync().ConfigureAwait(false),
+                };
+
+                if (response.Content.Headers.ContentType != null)
+                {
+                    routeFulfillOptions.ContentType = response.Content.Headers.ContentType.ToString();
+                }
+
+                await route.FulfillAsync()
+                    .ConfigureAwait(false);
             }
         }
     }
