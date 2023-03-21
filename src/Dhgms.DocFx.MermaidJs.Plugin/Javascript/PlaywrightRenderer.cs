@@ -54,11 +54,8 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Javascript
                     routeFulfillOptions.ContentType = response.Content.Headers.ContentType.ToString();
                 }
 
-                route.FulfillAsync();
+                route.FulfillAsync().Wait();
             }
-            // TODO: kestrel hook.
-
-            route.FulfillAsync(new RouteFulfillOptions { Body = "<html></html>", Status = 200 }).Wait();
         }
 
         private HttpRequestMessage GetRequestFromRoute(IRoute route)
@@ -68,6 +65,7 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Javascript
             var request = route.Request;
 
             httpRequestMessage.RequestUri = new Uri(request.Url);
+            PopulateHeaders(httpRequestMessage, request.Headers);
 
             switch (request.Method)
             {
@@ -106,6 +104,16 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Javascript
             }
 
             return httpRequestMessage;
+        }
+
+        private void PopulateHeaders(HttpRequestMessage httpRequestMessage, Dictionary<string, string> requestHeaders)
+        {
+            var targetHeaders = httpRequestMessage.Headers;
+
+            foreach (var requestHeader in requestHeaders)
+            {
+                targetHeaders.Add(requestHeader.Key, requestHeader.Value);
+            }
         }
     }
 }
