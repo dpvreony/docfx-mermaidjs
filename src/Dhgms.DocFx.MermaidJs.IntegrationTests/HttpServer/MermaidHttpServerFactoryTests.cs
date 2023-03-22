@@ -40,6 +40,12 @@ namespace Dhgms.DocFx.MermaidJs.IntegrationTests.HttpServer
                 .ConfigureAwait(false);
 #pragma warning restore CA2234 // Pass system uri objects instead of strings
             _ = response.EnsureSuccessStatusCode();
+
+#pragma warning disable CA2234 // Pass system uri objects instead of strings
+            response = await httpClient.GetAsync("lib/mermaid/accessibility.d.ts")
+                .ConfigureAwait(false);
+#pragma warning restore CA2234 // Pass system uri objects instead of strings
+            _ = response.EnsureSuccessStatusCode();
         }
 
         /// <summary>

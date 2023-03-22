@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="HttpServer\wwwroot\index.html" />
+    <EmbeddedResource Include="HttpServer\wwwroot\**\*.*" />
   </ItemGroup>
 
   <ItemGroup>
@@ -39,5 +39,17 @@
       <TfmSpecificPackageFile Include="bin\$(Configuration)\net6\*.*" PackagePath="template\mermaidjs\plugins" />
       <TfmSpecificPackageFile src="Dhgms.DocFx.MermaidJs.Plugin.targets" target="build\" />
     </ItemGroup>
+  </Target>
+
+  <!-- these tasks remove the need for gulp, grunt, npm, etc. to be used for file copying -->
+  <ItemGroup>
+    <NpmMermaidFilesToCopy Include="$(ProjectDir)node_modules\mermaid\dist\**\*.*" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="HttpServer\.gitignore" />
+  </ItemGroup>
+  <Target Name="CopyNpmTasks" BeforeTargets="BeforeBuild">
+    <Message Text="Starting NPM Package Copy Task" />
+    <Copy SkipUnchangedFiles="True" SourceFiles="@(NpmMermaidFilesToCopy)" DestinationFiles="@(NpmMermaidFilesToCopy->'$(ProjectDir)HttpServer\wwwroot\lib\mermaid\%(RecursiveDir)%(Filename)%(Extension)')" />
   </Target>
 </Project>
