@@ -30,18 +30,27 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.HttpServer
 
         private static IWebHostBuilder GetWebHostBuilder(ILoggerFactory loggerFactory)
         {
+            var embeddedProvider = new EmbeddedFileProvider(
+                typeof(MermaidHttpServerFactory).Assembly,
+                typeof(MermaidHttpServerFactory).Namespace + ".wwwroot");
+
             var builder = new WebHostBuilder()
                 .ConfigureLogging(loggingBuilder => ConfigureLogging(
                     loggingBuilder,
                     loggerFactory))
                 .ConfigureServices((webHostBuilderContext, serviceCollection) => ConfigureServices(
                     webHostBuilderContext,
-                    serviceCollection))
-                .Configure(ConfigureApp);
+                    serviceCollection,
+                    embeddedProvider))
+                .Configure((webHostBuilderContext, applicationBuilder) => ConfigureApp(
+                    webHostBuilderContext,
+                    applicationBuilder,
+                    embeddedProvider));
+
             return builder;
         }
 
-        private static void ConfigureApp(WebHostBuilderContext arg1, IApplicationBuilder arg2)
+        private static void ConfigureApp(WebHostBuilderContext webHostBuilderContext, IApplicationBuilder applicationBuilder, EmbeddedFileProvider embeddedFileProvider)
         {
             // TODO: add integration test
             // TODO: npm install
@@ -49,14 +58,15 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.HttpServer
             // TODO: serve embedded resources
             // TODO: routes for mermaid resources
             // TODO: index page
+            _ = applicationBuilder.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = embeddedFileProvider
+            });
         }
 
-        private static void ConfigureServices(WebHostBuilderContext webHostBuilderContext, IServiceCollection serviceCollection)
+        private static void ConfigureServices(WebHostBuilderContext webHostBuilderContext, IServiceCollection serviceCollection, EmbeddedFileProvider embeddedFileProvider)
         {
-            var embeddedProvider = new EmbeddedFileProvider(
-                typeof(MermaidHttpServerFactory).Assembly,
-                typeof(MermaidHttpServerFactory).Namespace + ".wwwroot");
-            _ = serviceCollection.AddSingleton<IFileProvider>(embeddedProvider);
+            _ = serviceCollection.AddSingleton<IFileProvider>(embeddedFileProvider);
         }
 
         private static void ConfigureLogging(ILoggingBuilder loggingBuilder, ILoggerFactory loggerFactory)

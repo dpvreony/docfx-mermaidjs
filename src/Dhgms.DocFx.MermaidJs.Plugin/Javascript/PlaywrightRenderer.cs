@@ -163,7 +163,7 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Javascript
             return httpRequestMessage;
         }
 
-        private void PopulateHeaders(HttpRequestMessage httpRequestMessage, Dictionary<string, string> requestHeaders)
+        private static void PopulateHeaders(HttpRequestMessage httpRequestMessage, Dictionary<string, string> requestHeaders)
         {
             var targetHeaders = httpRequestMessage.Headers;
 
@@ -172,7 +172,7 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Javascript
                 targetHeaders.Add(requestHeader.Key, requestHeader.Value);
             }
         }
-        
+
         private async Task MermaidPostHandler(IRoute route, string diagram)
         {
             using (var client = _mermaidHttpServerFactory.CreateClient())

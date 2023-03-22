@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="HttpServer\" />
+    <ProjectReference Include="..\Dhgms.DocFx.MermaidJs.Plugin\Dhgms.DocFx.MermaidJs.Plugin.csproj" />
   </ItemGroup>
 
 </Project>
