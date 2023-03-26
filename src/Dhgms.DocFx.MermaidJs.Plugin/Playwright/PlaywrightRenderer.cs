@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Logging;
 using Microsoft.Playwright;
 
-namespace Dhgms.DocFx.MermaidJs.Plugin.Javascript
+namespace Dhgms.DocFx.MermaidJs.Plugin.Playwright
 {
     /// <summary>
     /// Markdown renderer using Playwright.
@@ -20,6 +20,7 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Javascript
     public sealed class PlaywrightRenderer
     {
         private readonly TestServer _mermaidHttpServerFactory;
+        private readonly ILogger<PlaywrightRenderer> _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PlaywrightRenderer"/> class.
@@ -27,6 +28,8 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Javascript
         /// <param name="loggerFactory">Logging framework instance.</param>
         public PlaywrightRenderer(ILoggerFactory loggerFactory)
         {
+            ArgumentNullException.ThrowIfNull(loggerFactory);
+            _logger = loggerFactory.CreateLogger<PlaywrightRenderer>();
             _mermaidHttpServerFactory = MermaidHttpServerFactory.GetTestServer(loggerFactory);
         }
 
@@ -37,7 +40,7 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Javascript
         /// <returns>SVG diagram.</returns>
         public async Task<string?> GetSvg(string diagram)
         {
-            using (var playwright = await Playwright.CreateAsync()
+            using (var playwright = await Microsoft.Playwright.Playwright.CreateAsync()
                 .ConfigureAwait(false))
             await using (var browser = await playwright.Chromium.LaunchAsync(new() { Headless = true }))
             {
