@@ -1,10 +1,23 @@
-﻿using Markdig;
+﻿// Copyright (c) 2022 DHGMS Solutions and Contributors. All rights reserved.
+// This file is licensed to you under the MIT license.
+// See the LICENSE file in the project root for full license information.
+
+using System.Threading.Tasks;
+using Dhgms.DocFx.MermaidJs.Plugin.Markdig;
 using Microsoft.DocAsCode;
+using Microsoft.DocAsCode.MarkdigEngine.Extensions;
 
 namespace Dhgms.DocFx.MermaidJs.Sample.Cmd
 {
+    /// <summary>
+    /// Holds the program entry point.
+    /// </summary>
     public static class Program
     {
+        /// <summary>
+        /// Program entry point.
+        /// </summary>
+        /// <returns>Zero for success, non-zero for failure.</returns>
         public static async Task<int> Main()
         {
             try
@@ -12,7 +25,7 @@ namespace Dhgms.DocFx.MermaidJs.Sample.Cmd
                 var options = new BuildOptions
                 {
                     // Enable MermaidJS markdown extension
-                    ConfigureMarkdig = pipeline => pipeline.UseMermaidJs(),
+                    ConfigureMarkdig = pipeline => pipeline.UseMermaidJsExtension(new MarkdownContext()),
                 };
 
                 await Docset.Build("docfx.json", options);

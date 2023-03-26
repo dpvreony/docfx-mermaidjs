@@ -19,12 +19,10 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="6.0.15" />
-    <PackageReference Include="Microsoft.ClearScript" Version="7.4.0" />
     <PackageReference Include="Microsoft.DocAsCode.Dfm" Version="2.63.1" PrivateAssets="all" />
     <PackageReference Include="Microsoft.DocAsCode.MarkdigEngine.Extensions" Version="2.63.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.3" />
     <PackageReference Include="Microsoft.Playwright" Version="1.31.1" />
-    <PackageReference Include="PuppeteerSharp" Version="9.0.2" />
     <PackageReference Include="ReactiveMarbles.ObservableEvents.SourceGenerator" Version="1.2.3" PrivateAssets="all" />
     <PackageReference Include="System.Composition" Version="7.0.0" PrivateAssets="all" />
     <PackageReference Include="System.Reactive" Version="5.0.0" />
