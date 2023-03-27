@@ -48,17 +48,21 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Playwright
                     .ConfigureAwait(false);
 
                 await page.RouteAsync(
-                        "https://localhost/mermaid.html",
-                        route => MermaidPostHandler(route, diagram))
-                    .ConfigureAwait(false);
-
-                await page.RouteAsync(
-                        "*",
+                        "**/*.*",
                         route => DefaultHandler(route))
                     .ConfigureAwait(false);
 
-                var pageResponse = await page.GotoAsync("https://localhost/mermaid.html")
+                var pageResponse = await page.GotoAsync("http://localhost/index.html", new PageGotoOptions { WaitUntil = WaitUntilState.NetworkIdle })
                     .ConfigureAwait(false);
+
+                if (pageResponse == null)
+                {
+                    return null;
+                }
+
+                _ = await pageResponse.FinishedAsync();
+
+                await page.WaitForLoadStateAsync();
 
                 var mermaidElement = await page.QuerySelectorAsync("mermaid-element")
                     .ConfigureAwait(false);
@@ -176,30 +180,6 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Playwright
             }
         }
 
-        private async Task MermaidPostHandler(IRoute route, string diagram)
-        {
-            using (var client = _mermaidHttpServerFactory.CreateClient())
-            using (var request = GetRequestFromRoute(route, diagram))
-            {
-                var response = await client.SendAsync(request)
-                    .ConfigureAwait(false);
-
-                var routeFulfillOptions = new RouteFulfillOptions
-                {
-                    Status = (int)response.StatusCode,
-                    Body = await response.Content.ReadAsStringAsync().ConfigureAwait(false),
-                };
-
-                if (response.Content.Headers.ContentType != null)
-                {
-                    routeFulfillOptions.ContentType = response.Content.Headers.ContentType.ToString();
-                }
-
-                await route.FulfillAsync()
-                    .ConfigureAwait(false);
-            }
-        }
-
         private async Task DefaultHandler(IRoute route)
         {
             using (var client = _mermaidHttpServerFactory.CreateClient())
@@ -219,7 +199,7 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Playwright
                     routeFulfillOptions.ContentType = response.Content.Headers.ContentType.ToString();
                 }
 
-                await route.FulfillAsync()
+                await route.FulfillAsync(routeFulfillOptions)
                     .ConfigureAwait(false);
             }
         }
