@@ -99,16 +99,17 @@ namespace Dhgms.DocFx.MermaidJs.UnitTests.Plugin.Playwright
             /// Test to ensure the SVG generator returns specific results.
             /// </summary>
             /// <param name="diagram">Mermaid diagram to parse.</param>
-            /// <param name="expectedSvg">The expected result.</param>
+            /// <param name="expectedStart">The expected result.</param>
             /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
             [Theory]
             [ClassData(typeof(ReturnsResultTestSource))]
-            public async Task ReturnsResult(string diagram, string expectedSvg)
+            public async Task ReturnsResult(string diagram, string expectedStart)
             {
                 var instance = new PlaywrightRenderer(Log);
                 var svg = await instance.GetSvg(diagram).ConfigureAwait(false);
 
-                Assert.Equal(svg, expectedSvg);
+                Assert.NotNull(svg);
+                Assert.StartsWith(expectedStart, svg, StringComparison.Ordinal);
             }
 
             /// <summary>
@@ -127,7 +128,7 @@ namespace Dhgms.DocFx.MermaidJs.UnitTests.Plugin.Playwright
                         "    B-->D;" + Environment.NewLine +
                         "    C-->D;";
 
-                    Add(graph, string.Empty);
+                    Add(graph, "<svg aria-roledescription=\"flowchart-v2\" role=\"graphics-document document\"");
                 }
             }
 

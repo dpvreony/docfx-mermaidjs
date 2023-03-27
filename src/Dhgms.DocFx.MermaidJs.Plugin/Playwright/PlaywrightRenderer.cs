@@ -52,7 +52,7 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Playwright
                         route => DefaultHandler(route))
                     .ConfigureAwait(false);
 
-                var pageResponse = await page.GotoAsync("http://localhost/index.html", new PageGotoOptions { WaitUntil = WaitUntilState.NetworkIdle })
+                var pageResponse = await page.GotoAsync("https://localhost/index.html", new PageGotoOptions { WaitUntil = WaitUntilState.NetworkIdle })
                     .ConfigureAwait(false);
 
                 if (pageResponse == null)
@@ -62,17 +62,16 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Playwright
 
                 _ = await pageResponse.FinishedAsync();
 
-                await page.WaitForLoadStateAsync();
+                await page.WaitForLoadStateAsync(LoadState.NetworkIdle);
 
-                var mermaidElement = await page.QuerySelectorAsync("mermaid-element")
-                    .ConfigureAwait(false);
+                var mermaidElement = page.Locator("#mermaid-element");
 
                 if (mermaidElement == null)
                 {
                     return null;
                 }
 
-                var innerText = await mermaidElement.InnerTextAsync().ConfigureAwait(false);
+                var innerText = await mermaidElement.InnerHTMLAsync();
                 return innerText;
             }
         }
@@ -182,6 +181,19 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Playwright
 
         private async Task DefaultHandler(IRoute route)
         {
+            if (!route.Request.Url.StartsWith("https://localhost/", StringComparison.OrdinalIgnoreCase))
+            {
+                var routeFulfillOptions = new RouteFulfillOptions
+                {
+                    Status = 404
+                };
+
+                await route.FulfillAsync(routeFulfillOptions)
+                    .ConfigureAwait(false);
+
+                return;
+            }
+
             using (var client = _mermaidHttpServerFactory.CreateClient())
             using (var request = GetRequestFromRoute(route))
             {
