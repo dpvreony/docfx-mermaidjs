@@ -108,6 +108,8 @@ namespace Dhgms.DocFx.MermaidJs.UnitTests.Plugin.Playwright
                 var instance = new PlaywrightRenderer(Log);
                 var svg = await instance.GetSvg(diagram).ConfigureAwait(false);
 
+                _logger.LogInformation(svg);
+
                 Assert.NotNull(svg);
                 Assert.StartsWith(expectedStart, svg, StringComparison.Ordinal);
             }

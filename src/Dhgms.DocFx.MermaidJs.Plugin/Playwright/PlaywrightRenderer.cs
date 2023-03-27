@@ -48,7 +48,12 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Playwright
                     .ConfigureAwait(false);
 
                 await page.RouteAsync(
-                        "**/*.*",
+                        "https://localhost/index.html",
+                        route => MermaidPostHandler(route, diagram))
+                    .ConfigureAwait(false);
+
+                await page.RouteAsync(
+                        "**/*.{mjs,js}",
                         route => DefaultHandler(route))
                     .ConfigureAwait(false);
 
@@ -56,6 +61,11 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Playwright
                     .ConfigureAwait(false);
 
                 if (pageResponse == null)
+                {
+                    return null;
+                }
+
+                if (!pageResponse.Ok)
                 {
                     return null;
                 }
@@ -83,40 +93,11 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Playwright
             var request = route.Request;
 
             httpRequestMessage.RequestUri = new Uri(request.Url);
-
-            switch (request.Method)
+            httpRequestMessage.Method = HttpMethod.Post;
+            httpRequestMessage.Content = new FormUrlEncodedContent(new KeyValuePair<string, string>[]
             {
-                case "DELETE":
-                    httpRequestMessage.Method = HttpMethod.Delete;
-                    break;
-                case "GET":
-                    httpRequestMessage.Method = HttpMethod.Get;
-                    break;
-                case "HEAD":
-                    httpRequestMessage.Method = HttpMethod.Head;
-                    break;
-                case "OPTIONS":
-                    httpRequestMessage.Method = HttpMethod.Options;
-                    break;
-                case "PATCH":
-                    httpRequestMessage.Method = HttpMethod.Patch;
-                    break;
-                case "POST":
-                    httpRequestMessage.Method = HttpMethod.Post;
-                    httpRequestMessage.Content = new FormUrlEncodedContent(new KeyValuePair<string, string>[]
-                    {
-                        new("diagram", diagram)
-                    });
-                    break;
-                case "PUT":
-                    httpRequestMessage.Method = HttpMethod.Put;
-                    break;
-                case "TRACE":
-                    httpRequestMessage.Method = HttpMethod.Trace;
-                    break;
-                default:
-                    throw new ArgumentException("Failed to map request HTTP method", nameof(route));
-            }
+                new("diagram", diagram)
+            });
 
             return httpRequestMessage;
         }
@@ -176,6 +157,29 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Playwright
             foreach (var requestHeader in requestHeaders)
             {
                 targetHeaders.Add(requestHeader.Key, requestHeader.Value);
+            }
+        }
+
+        private async Task MermaidPostHandler(IRoute route, string diagram)
+        {
+            using (var client = _mermaidHttpServerFactory.CreateClient())
+            using (var request = GetRequestFromRoute(route, diagram))
+            {
+                var response = await client.SendAsync(request)
+                    .ConfigureAwait(false);
+                var routeFulfillOptions = new RouteFulfillOptions
+                {
+                    Status = (int)response.StatusCode,
+                    Body = await response.Content.ReadAsStringAsync().ConfigureAwait(false),
+                };
+
+                if (response.Content.Headers.ContentType != null)
+                {
+                    routeFulfillOptions.ContentType = response.Content.Headers.ContentType.ToString();
+                }
+
+                await route.FulfillAsync(routeFulfillOptions)
+                    .ConfigureAwait(false);
             }
         }
 
