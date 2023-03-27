@@ -70,9 +70,9 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Playwright
                     return null;
                 }
 
-                _ = await pageResponse.FinishedAsync();
+                _ = await pageResponse.FinishedAsync().ConfigureAwait(false);
 
-                await page.WaitForLoadStateAsync(LoadState.NetworkIdle);
+                await page.WaitForLoadStateAsync(LoadState.NetworkIdle).ConfigureAwait(false);
 
                 var mermaidElement = page.Locator("#mermaid-element");
 
@@ -82,6 +82,9 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Playwright
                 }
 
                 var innerText = await mermaidElement.InnerHTMLAsync();
+                var png = await mermaidElement.ScreenshotAsync(new LocatorScreenshotOptions { Type = ScreenshotType.Png })
+                    .ConfigureAwait(false);
+
                 return innerText;
             }
         }
