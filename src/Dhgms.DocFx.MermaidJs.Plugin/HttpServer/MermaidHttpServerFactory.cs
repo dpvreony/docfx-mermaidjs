@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -86,7 +87,7 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.HttpServer
             response.StatusCode = 200;
             response.ContentType = "text/html";
 
-            var sb = new System.Text.StringBuilder(543);
+            var sb = new System.Text.StringBuilder();
             _ = sb.AppendLine(@"<!DOCTYPE html>");
             _ = sb.AppendLine(@"<html lang=""en"" xmlns=""http://www.w3.org/1999/xhtml"">");
             _ = sb.AppendLine(@"<head>");
@@ -95,7 +96,7 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.HttpServer
             _ = sb.AppendLine(@"</head>");
             _ = sb.AppendLine(@"<body>");
             _ = sb.AppendLine(@"    <pre class=""mermaid"" name=""mermaid-element"" id=""mermaid-element"">");
-            _ = sb.AppendLine(diagram);
+            _ = sb.AppendLine(HtmlEncoder.Default.Encode(diagram));
             _ = sb.AppendLine(@"    </pre>");
             _ = sb.AppendLine(@"    <script type=""module"">");
             _ = sb.AppendLine(@"        import mermaid from '/lib/mermaid/mermaid.esm.min.mjs';");
