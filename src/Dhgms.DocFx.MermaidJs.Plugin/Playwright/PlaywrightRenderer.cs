@@ -40,9 +40,18 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Playwright
         /// <returns>SVG diagram.</returns>
         public async Task<string?> GetSvg(string diagram)
         {
+            if (string.IsNullOrWhiteSpace(diagram))
+            {
+                throw new ArgumentNullException(nameof(diagram));
+            }
+
             using (var playwright = await Microsoft.Playwright.Playwright.CreateAsync()
                 .ConfigureAwait(false))
-            await using (var browser = await playwright.Chromium.LaunchAsync(new() { Headless = true }))
+            await using (var browser = await playwright.Chromium.LaunchAsync(new()
+                         {
+                             Headless = true,
+                             Channel = "chrome"
+                         }))
             {
                 var page = await browser.NewPageAsync()
                     .ConfigureAwait(false);

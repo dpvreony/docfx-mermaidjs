@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Dhgms.DocFx.MermaidJs.Plugin.Playwright;
 using Markdig.Parsers;
 using Markdig.Renderers;
 using Markdig.Renderers.Html;
@@ -21,15 +22,21 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Markdig
     public sealed class HtmlMermaidJsRenderer : HtmlObjectRenderer<CodeBlock>
     {
         private readonly MarkdownContext _markdownContext;
+        private readonly PlaywrightRenderer _playwrightRenderer;
         private HashSet<string>? _blocksAsDiv;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HtmlMermaidJsRenderer"/> class.
         /// </summary>
         /// <param name="markdownContext">DocFX Markdown context.</param>
-        public HtmlMermaidJsRenderer(MarkdownContext markdownContext)
+        /// <param name="playwrightRenderer">Playwright Renderer used to generate mermaid.</param>
+        public HtmlMermaidJsRenderer(MarkdownContext markdownContext, PlaywrightRenderer playwrightRenderer)
         {
+            ArgumentNullException.ThrowIfNull(markdownContext);
+            ArgumentNullException.ThrowIfNull(playwrightRenderer);
+
             _markdownContext = markdownContext;
+            _playwrightRenderer = playwrightRenderer;
         }
 
         /// <summary>
@@ -47,6 +54,15 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Markdig
         {
             ArgumentNullException.ThrowIfNull(renderer);
             _ = renderer.EnsureLine();
+
+            /*
+            var diagram = "graph TD;" + Environment.NewLine +
+                          "    A-->B;" + Environment.NewLine +
+                          "    A-->C;" + Environment.NewLine +
+                          "    B-->D;" + Environment.NewLine +
+                          "    C-->D;";
+            var svg = _playwrightRenderer.GetSvg(diagram);
+            */
 
             // TODO: this is the bit we need to look at for "mermaid"
             if (_blocksAsDiv is not null && (obj as FencedCodeBlock)?.Info is string info &&

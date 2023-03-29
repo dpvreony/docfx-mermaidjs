@@ -9,7 +9,6 @@ using Microsoft.Extensions.Logging;
 using NetTestRegimentation;
 using Xunit;
 using Xunit.Abstractions;
-using static Dhgms.DocFx.MermaidJs.UnitTests.Plugin.Playwright.PlaywrightRendererTests.ConstructorMethod;
 
 namespace Dhgms.DocFx.MermaidJs.UnitTests.Plugin.Playwright
 {

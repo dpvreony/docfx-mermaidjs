@@ -5,6 +5,7 @@
 using System;
 using Markdig;
 using Microsoft.DocAsCode.MarkdigEngine.Extensions;
+using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Dhgms.DocFx.MermaidJs.Plugin.Markdig
 {
@@ -24,7 +25,7 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Markdig
             MarkdownContext context)
         {
             ArgumentNullException.ThrowIfNull(pipeline);
-            pipeline.Extensions.AddIfNotAlready(new MermaidJsExtension(context));
+            pipeline.Extensions.AddIfNotAlready(new MermaidJsExtension(context, new NullLoggerFactory()));
             return pipeline;
         }
     }

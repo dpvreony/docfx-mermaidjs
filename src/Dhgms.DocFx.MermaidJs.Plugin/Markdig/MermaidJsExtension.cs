@@ -3,10 +3,12 @@
 // See the LICENSE file in the project root for full license information.
 
 using System;
+using Dhgms.DocFx.MermaidJs.Plugin.Playwright;
 using Markdig;
 using Markdig.Renderers;
 using Markdig.Renderers.Html;
 using Microsoft.DocAsCode.MarkdigEngine.Extensions;
+using Microsoft.Extensions.Logging;
 
 namespace Dhgms.DocFx.MermaidJs.Plugin.Markdig
 {
@@ -16,14 +18,20 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Markdig
     public sealed class MermaidJsExtension : IMarkdownExtension
     {
         private readonly MarkdownContext _context;
+        private readonly ILoggerFactory _loggerFactory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MermaidJsExtension"/> class.
         /// </summary>
         /// <param name="context">Markdig context instance.</param>
-        public MermaidJsExtension(MarkdownContext context)
+        /// <param name="loggerFactory">NET core logging factory.</param>
+        public MermaidJsExtension(MarkdownContext context, ILoggerFactory loggerFactory)
         {
+            ArgumentNullException.ThrowIfNull(context);
+            ArgumentNullException.ThrowIfNull(loggerFactory);
+
             _context = context;
+            _loggerFactory = loggerFactory;
         }
 
         /// <inheritdoc/>
@@ -49,7 +57,7 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Markdig
                 _ = codeRenderer.BlocksAsDiv.Remove("mermaid");
 
                 // Must be inserted before CodeBlockRenderer
-                htmlRenderer.ObjectRenderers.Insert(0, new HtmlMermaidJsRenderer(_context));
+                htmlRenderer.ObjectRenderers.Insert(0, new HtmlMermaidJsRenderer(_context, new PlaywrightRenderer(_loggerFactory)));
             }
         }
     }

@@ -10,8 +10,10 @@
     <ProjectReference Include="..\Dhgms.DocFx.MermaidJs.Plugin\Dhgms.DocFx.MermaidJs.Plugin.csproj" />
   </ItemGroup>
 
+  <!--
   <Target Name="InstallPlaywright" AfterTargets="Build">
     <Message Text="Preparing to check playwright. This may take a few minutes on the first run." />
     <Exec Command="powershell bin/Debug/net6.0/playwright.ps1 install" />
   </Target>
+  -->
 </Project>
