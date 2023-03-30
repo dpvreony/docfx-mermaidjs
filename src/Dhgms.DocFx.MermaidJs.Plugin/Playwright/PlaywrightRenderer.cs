@@ -36,13 +36,13 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Playwright
         /// <summary>
         /// Gets the SVG for the Mermaid Diagram.
         /// </summary>
-        /// <param name="diagram">Diagram markdown to convert.</param>
+        /// <param name="markdown">Diagram markdown to convert.</param>
         /// <returns>SVG diagram.</returns>
-        public async Task<string?> GetSvg(string diagram)
+        public async Task<GetDiagramResponseModel?> GetDiagram(string markdown)
         {
-            if (string.IsNullOrWhiteSpace(diagram))
+            if (string.IsNullOrWhiteSpace(markdown))
             {
-                throw new ArgumentNullException(nameof(diagram));
+                throw new ArgumentNullException(nameof(markdown));
             }
 
             using (var playwright = await Microsoft.Playwright.Playwright.CreateAsync()
@@ -58,7 +58,7 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Playwright
 
                 await page.RouteAsync(
                         "https://localhost/index.html",
-                        route => MermaidPostHandler(route, diagram))
+                        route => MermaidPostHandler(route, markdown))
                     .ConfigureAwait(false);
 
                 await page.RouteAsync(
@@ -94,11 +94,11 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Playwright
                 var png = await mermaidElement.ScreenshotAsync(new LocatorScreenshotOptions { Type = ScreenshotType.Png })
                     .ConfigureAwait(false);
 
-                return innerText;
+                return new(innerText, png);
             }
         }
 
-        private static HttpRequestMessage GetRequestFromRoute(IRoute route, string diagram)
+        private static HttpRequestMessage GetRequestFromRoute(IRoute route, string markdown)
         {
             var httpRequestMessage = new HttpRequestMessage();
 
@@ -108,7 +108,7 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Playwright
             httpRequestMessage.Method = HttpMethod.Post;
             httpRequestMessage.Content = new FormUrlEncodedContent(new KeyValuePair<string, string>[]
             {
-                new("diagram", diagram)
+                new("diagram", markdown)
             });
 
             return httpRequestMessage;

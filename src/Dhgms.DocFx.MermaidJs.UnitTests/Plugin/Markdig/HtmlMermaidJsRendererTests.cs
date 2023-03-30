@@ -2,9 +2,11 @@
 // This file is licensed to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+using System;
 using Dhgms.DocFx.MermaidJs.Plugin.Markdig;
 using Dhgms.DocFx.MermaidJs.Plugin.Playwright;
 using Microsoft.DocAsCode.MarkdigEngine.Extensions;
+using Microsoft.Extensions.Logging.Abstractions;
 using NetTestRegimentation;
 using Xunit;
 using Xunit.Abstractions;
@@ -43,12 +45,26 @@ namespace Dhgms.DocFx.MermaidJs.UnitTests.Plugin.Markdig
             [ClassData(typeof(ThrowsArgumentNullExceptionTestSource))]
             public void ThrowsArgumentNullException(MarkdownContext arg1, PlaywrightRenderer arg2, string expectedParameterNameForException)
             {
-                throw new System.NotImplementedException();
+                var exception = Assert.Throws<ArgumentNullException>(() => new HtmlMermaidJsRenderer(arg1, arg2));
+
+                Assert.Equal(expectedParameterNameForException, exception.ParamName);
             }
 
-            public sealed class ThrowsArgumentNullExceptionTestSource : TheoryData<MarkdownContext, PlaywrightRenderer>
+            /// <summary>
+            /// Test source for <see cref="ThrowsArgumentNullException"/>.
+            /// </summary>
+            public sealed class ThrowsArgumentNullExceptionTestSource : TheoryData<MarkdownContext?, PlaywrightRenderer?, string>
             {
-
+                /// <summary>
+                /// Initializes a new instance of the <see cref="ThrowsArgumentNullExceptionTestSource"/> class.
+                /// </summary>
+                public ThrowsArgumentNullExceptionTestSource()
+                {
+#pragma warning disable CA2000 // Dispose objects before losing scope
+                    Add(null, new PlaywrightRenderer(new NullLoggerFactory()), "markdownContext");
+#pragma warning restore CA2000 // Dispose objects before losing scope
+                    Add(new MarkdownContext(), null, "playwrightRenderer");
+                }
             }
         }
     }

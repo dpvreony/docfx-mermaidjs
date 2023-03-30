@@ -59,12 +59,6 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.HttpServer
 
         private static void ConfigureApp(WebHostBuilderContext webHostBuilderContext, IApplicationBuilder applicationBuilder, EmbeddedFileProvider embeddedFileProvider)
         {
-            // TODO: add integration test
-            // TODO: npm install
-            // TODO: pre-build task to embed mermaidjs files
-            // TODO: serve embedded resources
-            // TODO: routes for mermaid resources
-            // TODO: index page
             _ = applicationBuilder.UseStaticFiles(new StaticFileOptions
             {
                 FileProvider = embeddedFileProvider

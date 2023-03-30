@@ -69,15 +69,15 @@ namespace Dhgms.DocFx.MermaidJs.UnitTests.Plugin.Playwright
         }
 
         /// <summary>
-        /// Unit Tests for <see cref="PlaywrightRenderer.GetSvg"/>.
+        /// Unit Tests for <see cref="PlaywrightRenderer.GetDiagram"/>.
         /// </summary>
-        public sealed class GetSvgMethod : Foundatio.Xunit.TestWithLoggingBase, ITestAsyncMethodWithNullableParameters<string>
+        public sealed class GetDiagramMethod : Foundatio.Xunit.TestWithLoggingBase, ITestAsyncMethodWithNullableParameters<string>
         {
             /// <summary>
-            /// Initializes a new instance of the <see cref="GetSvgMethod"/> class.
+            /// Initializes a new instance of the <see cref="GetDiagramMethod"/> class.
             /// </summary>
             /// <param name="output">XUnit test output instance.</param>
-            public GetSvgMethod(ITestOutputHelper output)
+            public GetDiagramMethod(ITestOutputHelper output)
                 : base(output)
             {
             }
@@ -88,7 +88,7 @@ namespace Dhgms.DocFx.MermaidJs.UnitTests.Plugin.Playwright
             public async Task ThrowsArgumentNullExceptionAsync(string arg, string expectedParameterNameForException)
             {
                 var instance = new PlaywrightRenderer(Log);
-                var exception = await Assert.ThrowsAsync<ArgumentNullException>(() => instance.GetSvg(arg))
+                var exception = await Assert.ThrowsAsync<ArgumentNullException>(() => instance.GetDiagram(arg))
                     .ConfigureAwait(false);
 
                 Assert.Equal(expectedParameterNameForException, exception.ParamName);
@@ -105,16 +105,18 @@ namespace Dhgms.DocFx.MermaidJs.UnitTests.Plugin.Playwright
             public async Task ReturnsResult(string diagram, string expectedStart)
             {
                 var instance = new PlaywrightRenderer(Log);
-                var svg = await instance.GetSvg(diagram).ConfigureAwait(false);
+                var diagramResponseModel = await instance.GetDiagram(diagram).ConfigureAwait(false);
 
-                _logger.LogInformation(svg);
+                Assert.NotNull(diagramResponseModel);
 
-                Assert.NotNull(svg);
-                Assert.StartsWith(expectedStart, svg, StringComparison.Ordinal);
+                _logger.LogInformation(diagramResponseModel.Svg);
+
+                Assert.NotNull(diagramResponseModel.Svg);
+                Assert.StartsWith(expectedStart, diagramResponseModel.Svg, StringComparison.Ordinal);
             }
 
             /// <summary>
-            /// Test source <see cref="PlaywrightRenderer.GetSvg"/>.
+            /// Test source <see cref="PlaywrightRenderer.GetDiagram"/>.
             /// </summary>
             public sealed class ReturnsResultTestSource : TheoryData<string, string>
             {
@@ -143,7 +145,7 @@ namespace Dhgms.DocFx.MermaidJs.UnitTests.Plugin.Playwright
                 /// </summary>
                 public ThrowsArgumentNullExceptionAsyncTestSource()
                 {
-                    Add(null, "diagram");
+                    Add(null, "markdown");
                 }
             }
         }
