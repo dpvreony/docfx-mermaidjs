@@ -53,8 +53,7 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Markdig
                 // there is a built in renderer for mermaidjs in markdig, but it uses JS to do rendering in the browser
                 // we don't want that, we want the assets produced at build time
                 // single point of processing and avoids issue with the DocFX pdf processor.
-                var codeRenderer = htmlRenderer.ObjectRenderers.FindExact<CodeBlockRenderer>()!;
-                _ = codeRenderer.BlocksAsDiv.Remove("mermaid");
+                var codeRenderer = htmlRenderer.ObjectRenderers.TryRemove<CodeBlockRenderer>()!;
 
                 // Must be inserted before CodeBlockRenderer
                 htmlRenderer.ObjectRenderers.Insert(0, new HtmlMermaidJsRenderer(_context, new PlaywrightRenderer(_loggerFactory)));
