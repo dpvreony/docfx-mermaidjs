@@ -3,9 +3,15 @@
 // See the LICENSE file in the project root for full license information.
 
 using System;
+using System.IO;
 using Dhgms.DocFx.MermaidJs.Plugin.Markdig;
 using Dhgms.DocFx.MermaidJs.Plugin.Playwright;
+using Markdig;
+using Markdig.Parsers;
+using Markdig.Renderers;
+using Markdig.Syntax;
 using Microsoft.DocAsCode.MarkdigEngine.Extensions;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using NetTestRegimentation;
 using Xunit;
@@ -65,6 +71,45 @@ namespace Dhgms.DocFx.MermaidJs.UnitTests.Plugin.Markdig
 #pragma warning restore CA2000 // Dispose objects before losing scope
                     Add(new MarkdownContext(), null, "playwrightRenderer");
                 }
+            }
+        }
+
+        /// <summary>
+        /// Unit Tests for <see cref="HtmlMermaidJsRenderer.Write"/>.
+        /// </summary>
+        public sealed class WriteMethod : Foundatio.Xunit.TestWithLoggingBase
+        {
+            /// <summary>
+            /// Initializes a new instance of the <see cref="WriteMethod"/> class.
+            /// </summary>
+            /// <param name="output">XUnit test output instance.</param>
+            public WriteMethod(ITestOutputHelper output)
+                : base(output)
+            {
+            }
+
+            /// <summary>
+            /// Test to ensure markdown is formatted to mermaid.
+            /// </summary>
+            [Fact]
+            public void WritesMarkdown()
+            {
+                var markdown = "```mermaid" + Environment.NewLine +
+                               "graph TD;" + Environment.NewLine +
+                               "    A-->B;" + Environment.NewLine +
+                               "    A-->C;" + Environment.NewLine +
+                               "    B-->D;" + Environment.NewLine +
+                               "    C-->D;" + Environment.NewLine +
+                               "```";
+
+                var context = new MarkdownContext();
+                var pipelineBuilder = new MarkdownPipelineBuilder()
+                    .UseMermaidJsExtension(context);
+
+                var pipeline = pipelineBuilder.Build();
+                var actualHtml = Markdown.ToHtml(markdown, pipeline);
+
+                _logger.LogInformation(actualHtml);
             }
         }
     }

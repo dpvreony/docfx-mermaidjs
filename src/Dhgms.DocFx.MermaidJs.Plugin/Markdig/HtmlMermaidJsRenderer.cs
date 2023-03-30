@@ -13,6 +13,7 @@ using Markdig.Renderers;
 using Markdig.Renderers.Html;
 using Markdig.Syntax;
 using Microsoft.DocAsCode.MarkdigEngine.Extensions;
+using Nito.AsyncEx.Synchronous;
 
 namespace Dhgms.DocFx.MermaidJs.Plugin.Markdig
 {
@@ -61,64 +62,37 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Markdig
                           "    A-->C;" + Environment.NewLine +
                           "    B-->D;" + Environment.NewLine +
                           "    C-->D;";
-            var svg = _playwrightRenderer.GetSvg(diagram);
             */
 
-            // TODO: this is the bit we need to look at for "mermaid"
-            if (_blocksAsDiv is not null && (obj as FencedCodeBlock)?.Info is string info &&
-                _blocksAsDiv.Contains(info))
+            if (obj?.Lines == null)
             {
-                var infoPrefix = (obj.Parser as FencedCodeBlockParser)?.InfoPrefix ??
-                                 FencedCodeBlockParser.DefaultInfoPrefix;
-
-                // We are replacing the HTML attribute `language-mylang` by `mylang` only for a div block
-                // NOTE that we are allocating a closure here
-                if (renderer.EnableHtmlForBlock)
-                {
-                    _ = renderer.Write("<div")
-                        .WriteAttributes(
-                            obj.TryGetAttributes(),
-                            cls => cls.StartsWith(infoPrefix, StringComparison.Ordinal)
-                                ? cls.Substring(infoPrefix.Length)
-                                : cls)
-                        .Write('>');
-                }
-
-                _ = renderer.WriteLeafRawLines(obj, true, true, true);
-
-                if (renderer.EnableHtmlForBlock)
-                {
-                    _ = renderer.WriteLine("</div>");
-                }
+                return;
             }
-            else
+
+            var mermaidMarkup = obj.Lines.ToSlice().Text;
+            var responseModel = _playwrightRenderer.GetDiagram(mermaidMarkup).WaitAndUnwrapException();
+
+            if (responseModel == null)
             {
-                if (renderer.EnableHtmlForBlock)
-                {
-                    _ = renderer.Write("<pre");
-
-                    if (OutputAttributesOnPre)
-                    {
-                        _ = renderer.WriteAttributes(obj);
-                    }
-
-                    _ = renderer.Write("><code");
-
-                    if (!OutputAttributesOnPre)
-                    {
-                        _ = renderer.WriteAttributes(obj);
-                    }
-
-                    _ = renderer.Write('>');
-                }
-
-                _ = renderer.WriteLeafRawLines(obj, true, true);
-
-                if (renderer.EnableHtmlForBlock)
-                {
-                    _ = renderer.WriteLine("</code></pre>");
-                }
+                return;
             }
+
+            var imageBase64 = Convert.ToBase64String(responseModel.Png);
+
+            var properties = new List<KeyValuePair<string, string?>>
+            {
+                new("alt", "Mermaid Diagram"),
+                new("src", $"data:image/png;base64,{imageBase64}")
+            };
+
+            var attributes = new HtmlAttributes
+            {
+                Properties = properties
+            };
+
+            _ = renderer.Write("<img")
+                .WriteAttributes(attributes)
+                .Write('>');
 
             _ = renderer.EnsureLine();
         }
