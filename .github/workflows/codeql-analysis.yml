@@ -60,9 +60,18 @@ jobs:
     - name: Cleanup nuget local storage
       run: dotnet nuget locals all --clear
 
+    - name: Install dotnet tools
+      run: dotnet tool restore
+
     - name: Restore Packages
       run: |
         dotnet restore ${{ env.SOLUTION_PATH }} /bl:artifacts\\binlog\\restore.binlog
+
+    - name: NPM package restore
+      run: |
+        pushd src\Dhgms.DocFx.MermaidJs.Plugin\
+        npm install
+        popd
 
     # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL

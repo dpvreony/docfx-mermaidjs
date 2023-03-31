@@ -10,10 +10,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="HttpServer\wwwroot\**\*.*" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="6.0.15" />
     <PackageReference Include="Microsoft.DocAsCode.Dfm" Version="2.63.1" PrivateAssets="all" />
     <PackageReference Include="Microsoft.DocAsCode.MarkdigEngine.Extensions" Version="2.63.1" />
@@ -43,8 +39,14 @@
   <ItemGroup>
     <EmbeddedResource Include="HttpServer\.gitignore" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="HttpServer\wwwroot\" />
+  </ItemGroup>
   <Target Name="CopyNpmTasks" BeforeTargets="BeforeBuild">
     <Message Text="Starting NPM Package Copy Task" />
     <Copy SkipUnchangedFiles="True" SourceFiles="@(NpmMermaidFilesToCopy)" DestinationFiles="@(NpmMermaidFilesToCopy->'$(ProjectDir)HttpServer\wwwroot\lib\mermaid\%(RecursiveDir)%(Filename)%(Extension)')" />
+    <ItemGroup>
+      <EmbeddedResource Include="HttpServer\wwwroot\**\*.*" />
+    </ItemGroup>
   </Target>
 </Project>
