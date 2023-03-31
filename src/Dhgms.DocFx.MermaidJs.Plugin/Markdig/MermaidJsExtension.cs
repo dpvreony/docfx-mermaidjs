@@ -39,7 +39,13 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Markdig
         {
             ArgumentNullException.ThrowIfNull(pipeline);
 
-            // pipeline.BlockParsers.AddIfNotAlready<MermaidJsBlockParser>();
+            if (pipeline.BlockParsers.Contains<MermaidJsBlockParser>())
+            {
+                return;
+            }
+
+            // we need it before the fenced block code parser.
+            pipeline.BlockParsers.Insert(0, new MermaidJsBlockParser());
         }
 
         /// <inheritdoc/>
@@ -50,12 +56,7 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Markdig
 
             if (renderer is HtmlRenderer htmlRenderer)
             {
-                // there is a built in renderer for mermaidjs in markdig, but it uses JS to do rendering in the browser
-                // we don't want that, we want the assets produced at build time
-                // single point of processing and avoids issue with the DocFX pdf processor.
-                var codeRenderer = htmlRenderer.ObjectRenderers.TryRemove<CodeBlockRenderer>()!;
-
-                // Must be inserted before CodeBlockRenderer
+                // Must be inserted before FencedCodeBlockRenderer
                 htmlRenderer.ObjectRenderers.Insert(0, new HtmlMermaidJsRenderer(_context, new PlaywrightRenderer(_loggerFactory)));
             }
         }

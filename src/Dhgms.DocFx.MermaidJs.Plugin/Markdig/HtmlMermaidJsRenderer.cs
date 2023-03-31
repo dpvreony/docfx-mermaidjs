@@ -20,7 +20,7 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Markdig
     /// <summary>
     /// HTML renderer for MermaidJS Code Blocks.
     /// </summary>
-    public sealed class HtmlMermaidJsRenderer : CodeBlockRenderer
+    public sealed class HtmlMermaidJsRenderer : HtmlObjectRenderer<MermaidCodeBlock>
     {
         private readonly MarkdownContext _markdownContext;
         private readonly PlaywrightRenderer _playwrightRenderer;
@@ -40,7 +40,7 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Markdig
         }
 
         /// <inheritdoc/>
-        protected override void Write(HtmlRenderer renderer, CodeBlock obj)
+        protected override void Write(HtmlRenderer renderer, MermaidCodeBlock obj)
         {
             ArgumentNullException.ThrowIfNull(renderer);
             ArgumentNullException.ThrowIfNull(obj);
@@ -54,40 +54,33 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Markdig
                           "    C-->D;";
             */
 
-            if (obj is FencedCodeBlock fencedCodeBlock
-                && fencedCodeBlock.Info != null
-                && fencedCodeBlock.Info.Equals("mermaid", StringComparison.Ordinal))
+            var mermaidMarkup = obj.Lines.ToSlice().Text;
+            var responseModel = _playwrightRenderer.GetDiagram(mermaidMarkup).WaitAndUnwrapException();
+
+            if (responseModel == null)
             {
-                var mermaidMarkup = obj.Lines.ToSlice().Text;
-                var responseModel = _playwrightRenderer.GetDiagram(mermaidMarkup).WaitAndUnwrapException();
-
-                if (responseModel == null)
-                {
-                    return;
-                }
-
-                var imageBase64 = Convert.ToBase64String(responseModel.Png);
-
-                var properties = new List<KeyValuePair<string, string?>>
-                {
-                    new("alt", "Mermaid Diagram"),
-                    new("src", $"data:image/png;base64,{imageBase64}")
-                };
-
-                var attributes = new HtmlAttributes
-                {
-                    Properties = properties
-                };
-
-                _ = renderer.Write("<img")
-                    .WriteAttributes(attributes)
-                    .Write('>');
-
-                _ = renderer.EnsureLine();
                 return;
             }
 
-            base.Write(renderer, obj);
+            var imageBase64 = Convert.ToBase64String(responseModel.Png);
+
+            var properties = new List<KeyValuePair<string, string?>>
+            {
+                new("alt", "Mermaid Diagram"),
+                new("src", $"data:image/png;base64,{imageBase64}")
+            };
+
+            var attributes = new HtmlAttributes
+            {
+                Properties = properties
+            };
+
+            _ = renderer.Write("<img")
+                .WriteAttributes(attributes)
+                .Write('>');
+
+            _ = renderer.EnsureLine();
+            return;
         }
     }
 }

@@ -100,6 +100,10 @@ namespace Dhgms.DocFx.MermaidJs.UnitTests.Plugin.Markdig
                                "    A-->C;" + Environment.NewLine +
                                "    B-->D;" + Environment.NewLine +
                                "    C-->D;" + Environment.NewLine +
+                               "```" + Environment.NewLine +
+                               Environment.NewLine +
+                               "```csharp" + Environment.NewLine +
+                               "   int i = 1;" + Environment.NewLine +
                                "```";
 
                 var context = new MarkdownContext();
