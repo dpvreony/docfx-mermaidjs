@@ -49,6 +49,12 @@
       "commands": [
         "dotnet-project-licenses"
       ]
+    },
+    "docfx": {
+      "version": "2.61.0",
+      "commands": [
+        "docfx"
+      ]
     }
   }
 }
