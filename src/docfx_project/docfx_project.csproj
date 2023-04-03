@@ -5,6 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <LogLevel>Debug</LogLevel>
+    <IsPackable>False</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>

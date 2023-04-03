@@ -5,6 +5,7 @@
     <Nullable>enable</Nullable>
     <OutputType>Exe</OutputType>
     <NoWarn>$(NoWarn);NU1701</NoWarn>
+    <IsPackable>False</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
