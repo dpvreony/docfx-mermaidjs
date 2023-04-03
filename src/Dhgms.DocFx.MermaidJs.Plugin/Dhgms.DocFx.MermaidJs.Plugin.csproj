@@ -4,8 +4,6 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <LangVersion>latest</LangVersion>
-    <DevelopmentDependency>true</DevelopmentDependency>
-    <IncludeBuildOutput>false</IncludeBuildOutput>
     <NoWarn>$(NoWarn);NU5128;NU5100</NoWarn>
   </PropertyGroup>
 
@@ -20,17 +18,6 @@
     <PackageReference Include="System.Composition" Version="7.0.0" PrivateAssets="all" />
     <PackageReference Include="System.Reactive" Version="5.0.0" />
   </ItemGroup>
-
-  <PropertyGroup>
-    <TargetsForTfmSpecificContentInPackage>$(TargetsForTfmSpecificContentInPackage);CustomContentInPackage</TargetsForTfmSpecificContentInPackage>
-  </PropertyGroup>
-
-  <Target Name="CustomContentInPackage">
-    <ItemGroup>
-      <TfmSpecificPackageFile Include="bin\$(Configuration)\net6\*.*" PackagePath="template\mermaidjs\plugins" />
-      <TfmSpecificPackageFile src="Dhgms.DocFx.MermaidJs.Plugin.targets" target="build\" />
-    </ItemGroup>
-  </Target>
 
   <!-- these tasks remove the need for gulp, grunt, npm, etc. to be used for file copying -->
   <ItemGroup>
