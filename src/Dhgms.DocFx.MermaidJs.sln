@@ -11,9 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dhgms.DocFx.MermaidJs.Plugi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dhgms.DocFx.MermaidJs.IntegrationTests", "Dhgms.DocFx.MermaidJs.IntegrationTests\Dhgms.DocFx.MermaidJs.IntegrationTests.csproj", "{5643F822-D2DD-469C-80B1-2079F353021A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "docfx_project", "docfx_project\docfx_project.csproj", "{5F572662-13B8-4C06-9F5C-00AC05D8DC3E}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dhgms.DocFx.MermaidJs.Sample.Cmd", "Dhgms.DocFx.MermaidJs.Sample.Cmd\Dhgms.DocFx.MermaidJs.Sample.Cmd.csproj", "{11774A24-3257-4E3E-9EEF-4D87311D3FE2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dhgms.DocFx.MermaidJs.Sample.Cmd", "Dhgms.DocFx.MermaidJs.Sample.Cmd\Dhgms.DocFx.MermaidJs.Sample.Cmd.csproj", "{11774A24-3257-4E3E-9EEF-4D87311D3FE2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,10 +31,6 @@ Global
 		{5643F822-D2DD-469C-80B1-2079F353021A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5643F822-D2DD-469C-80B1-2079F353021A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5643F822-D2DD-469C-80B1-2079F353021A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5F572662-13B8-4C06-9F5C-00AC05D8DC3E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5F572662-13B8-4C06-9F5C-00AC05D8DC3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5F572662-13B8-4C06-9F5C-00AC05D8DC3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5F572662-13B8-4C06-9F5C-00AC05D8DC3E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{11774A24-3257-4E3E-9EEF-4D87311D3FE2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{11774A24-3257-4E3E-9EEF-4D87311D3FE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{11774A24-3257-4E3E-9EEF-4D87311D3FE2}.Release|Any CPU.ActiveCfg = Release|Any CPU

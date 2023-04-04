@@ -9,10 +9,23 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="*.md" />
+    <None Remove="api/*.md" />
+    <None Remove="articles/*.md" />
+    <Content Include="**/*.md" />
+    <Content Include="api/*.md" />
+    <Content Include="articles/*.md" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.DocAsCode.App" Version="2.64.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Dhgms.DocFx.MermaidJs.Plugin\Dhgms.DocFx.MermaidJs.Plugin.csproj" />
   </ItemGroup>
+
+  <Target Name="RunDocFxGeneration" AfterTargets="Build">
+    <Exec Command="$(OutDir)\Dhgms.DocFx.MermaidJs.Sample.Cmd.exe" ConsoleToMSBuild="true" LogStandardErrorAsError="true" />
+  </Target>
 </Project>
