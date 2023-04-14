@@ -36,16 +36,22 @@ namespace Dhgms.DocFx.MermaidJs.IntegrationTests.HttpServer
             var testServer = MermaidHttpServerFactory.GetTestServer(Log);
             var httpClient = testServer.CreateClient();
 #pragma warning disable CA2234 // Pass system uri objects instead of strings
-            var response = await httpClient.GetAsync("index.html")
-                .ConfigureAwait(false);
+            using (var content = new FormUrlEncodedContent(new KeyValuePair<string, string>[]
+                   {
+                       new("diagram", string.Empty)
+                   }))
+            {
+                var response = await httpClient.PostAsync("index.html", content)
+                    .ConfigureAwait(false);
 #pragma warning restore CA2234 // Pass system uri objects instead of strings
-            _ = response.EnsureSuccessStatusCode();
+                _ = response.EnsureSuccessStatusCode();
 
 #pragma warning disable CA2234 // Pass system uri objects instead of strings
-            response = await httpClient.GetAsync("lib/mermaid/accessibility.d.ts")
-                .ConfigureAwait(false);
+                response = await httpClient.GetAsync("lib/mermaid/mermaid.esm.min.mjs")
+                    .ConfigureAwait(false);
 #pragma warning restore CA2234 // Pass system uri objects instead of strings
-            _ = response.EnsureSuccessStatusCode();
+                _ = response.EnsureSuccessStatusCode();
+            }
         }
 
         /// <summary>

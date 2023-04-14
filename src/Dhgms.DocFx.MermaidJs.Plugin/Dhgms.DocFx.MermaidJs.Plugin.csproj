@@ -21,7 +21,8 @@
 
   <!-- these tasks remove the need for gulp, grunt, npm, etc. to be used for file copying -->
   <ItemGroup>
-    <NpmMermaidFilesToCopy Include="$(ProjectDir)node_modules\mermaid\dist\**\*.*" />
+    <NpmMermaidFilesToCopy Include="$(ProjectDir)node_modules\mermaid\dist\*.js" />
+    <NpmMermaidFilesToCopy Include="$(ProjectDir)node_modules\mermaid\dist\*.mjs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="HttpServer\.gitignore" />
