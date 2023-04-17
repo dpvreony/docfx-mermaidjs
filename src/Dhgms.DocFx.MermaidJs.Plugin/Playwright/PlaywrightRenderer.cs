@@ -8,6 +8,7 @@ using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Dhgms.DocFx.MermaidJs.Plugin.HttpServer;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Logging;
 using Microsoft.Playwright;
@@ -116,59 +117,48 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Playwright
 
         private static HttpRequestMessage GetRequestFromRoute(IRoute route)
         {
-            var httpRequestMessage = new HttpRequestMessage();
-
             var request = route.Request;
 
-            httpRequestMessage.RequestUri = new Uri(request.Url);
-            PopulateHeaders(httpRequestMessage, request.Headers);
-
-            switch (request.Method)
+            var httpRequestMessage = new HttpRequestMessage
             {
-                case "DELETE":
-                    httpRequestMessage.Method = HttpMethod.Delete;
-                    break;
-                case "GET":
-                    httpRequestMessage.Method = HttpMethod.Get;
-                    break;
-                case "HEAD":
-                    httpRequestMessage.Method = HttpMethod.Head;
-                    break;
-                case "OPTIONS":
-                    httpRequestMessage.Method = HttpMethod.Options;
-                    break;
-                case "PATCH":
-                    httpRequestMessage.Method = HttpMethod.Patch;
-                    break;
-                case "POST":
-                    httpRequestMessage.Method = HttpMethod.Post;
+                RequestUri = new Uri(request.Url)
+            };
 
-                    if (request.PostDataBuffer != null)
-                    {
-                        httpRequestMessage.Content = new StreamContent(new MemoryStream(request.PostDataBuffer));
-                    }
+            httpRequestMessage.PopulateHeaders(request.Headers);
 
-                    break;
-                case "PUT":
-                    httpRequestMessage.Method = HttpMethod.Put;
-                    break;
-                case "TRACE":
-                    httpRequestMessage.Method = HttpMethod.Trace;
-                    break;
-                default:
-                    throw new ArgumentException("Failed to map request HTTP method", nameof(route));
+            var httpMethod = GetHttpMethod(request.Method);
+
+            if (httpMethod == HttpMethod.Patch || httpMethod == HttpMethod.Post || httpMethod == HttpMethod.Put)
+            {
+                AddContent(httpRequestMessage, request);
             }
 
             return httpRequestMessage;
         }
 
-        private static void PopulateHeaders(HttpRequestMessage httpRequestMessage, Dictionary<string, string> requestHeaders)
+        private static HttpMethod GetHttpMethod(string requestMethod)
         {
-            var targetHeaders = httpRequestMessage.Headers;
-
-            foreach (var requestHeader in requestHeaders)
+            return requestMethod switch
             {
-                targetHeaders.Add(requestHeader.Key, requestHeader.Value);
+                "DELETE" => HttpMethod.Delete,
+                "GET" => HttpMethod.Get,
+                "HEAD" => HttpMethod.Head,
+                "OPTIONS" => HttpMethod.Options,
+                "PATCH" => HttpMethod.Patch,
+                "POST" => HttpMethod.Post,
+                "PUT" => HttpMethod.Put,
+                "TRACE" => HttpMethod.Trace,
+                _ => throw new ArgumentException(
+                                        "Failed to map request HTTP method",
+                                        nameof(requestMethod)),
+            };
+        }
+
+        private static void AddContent(HttpRequestMessage httpRequestMessage, IRequest request)
+        {
+            if (request.PostDataBuffer != null)
+            {
+                httpRequestMessage.Content = new StreamContent(new MemoryStream(request.PostDataBuffer));
             }
         }
 

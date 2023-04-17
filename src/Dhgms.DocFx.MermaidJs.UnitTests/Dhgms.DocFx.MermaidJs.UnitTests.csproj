@@ -8,7 +8,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Dhgms.DocFx.MermaidJs.Plugin\Dhgms.DocFx.MermaidJs.Plugin.csproj" />
-    <ProjectReference Include="..\Dhgms.DocFx.MermaidJs.Sample.Cmd\Dhgms.DocFx.MermaidJs.Sample.Cmd.csproj" />
+    <ProjectReference Include="..\Dhgms.DocFx.MermaidJs.Sample.Cmd\Dhgms.DocFx.MermaidJs.Sample.Cmd.csproj">
+      <ReferenceOutputAssembly>True</ReferenceOutputAssembly>
+    </ProjectReference>
   </ItemGroup>
 
   <!--
