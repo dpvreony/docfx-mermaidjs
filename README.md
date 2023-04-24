@@ -23,6 +23,8 @@ This DocFX MermaidJS plugin is a wrapper around the mermaid-cli NPM package. It 
 
 ## Getting Started
 
+**This is out of date for MarkDig support, the details below only work for DFM which is the older style of markdown in DocFX. This will be updated shortly**
+
 ### Pre-requisites
 
 You will need:
