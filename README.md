@@ -6,7 +6,7 @@ To provide a plugin to convert MermaidJS notations to diagrams during the build 
 
 ## Introduction
 
-This DocFX MermaidJS plugin is a wrapper around the mermaid-cli NPM package. It is aimed at doing build time generation of the mermaid diagram so:
+This DocFX MermaidJS plugin is a wrapper around the mermaid NPM package. It is aimed at doing build time generation of the mermaid diagram so:
 
 * The syntax can be validated at build time.
 * The image is only built once.
