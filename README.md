@@ -44,7 +44,7 @@ You can see an example of this in
 2. [The console application in my main documentation repository (github.com/dpvreony/documentation/tree/main/src/docfx_project)](https://github.com/dpvreony/documentation/tree/main/src/docfx_project)
 
 NOTES:
-* Currently only HTML generation is supported, PDF is not supported due to a limitation in DocFX which I'm looking to resolve with a PR.
+* Currently only HTML generation is supported, PDF is not supported due to a breaking change in DocFX 2.60 which I'm looking to resolve with a PR.
 * Only inline PNG is supported, this is due to a limitation in the plug in model and adding new files to the file cache on the fly. I may revisit this in future. The plug in itself exposes SVG data if you want to play with it.
 
 You can adjust the settings by viewing the detailed documentation.
