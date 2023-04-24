@@ -23,74 +23,33 @@ This DocFX MermaidJS plugin is a wrapper around the mermaid-cli NPM package. It 
 
 ## Getting Started
 
-**This is out of date for MarkDig support, the details below only work for DFM which is the older style of markdown in DocFX. This will be updated shortly**
+v2 of this plug in only supports MarkDig, due to DocFx 2.60 deprecating support for DFM. The plug in model is significantly different in v2.60 as well and requires you to have your own application to run the DocFX generation.
 
-### Pre-requisites
+### 1. Create a console application (or similar)
+### 2. Add a nuget package reference to "Dhgms.DocFX.Mermaid.Plugin" in your docfx_project
+### 3. Add the following initialisation
 
-You will need:
-* NodeJS
-* NPM
-* A docfx project
-
-The instructions below assume the DocFX project is called "docfx_project"
-
-### Setting up NodeJS
-
-In your docfx project folder create a package.json file with content similar to:
-
-```json
-{
-    "name": "docfx",
-    "version": "1.0.0",
-    "devDependencies": {
-        "@mermaid-js/mermaid-cli": "9.2.2"
-    }
-}
+```cs
+                var options = new BuildOptions
+                {
+                    // Enable MermaidJS markdown extension
+                    ConfigureMarkdig = pipeline => pipeline.UseMermaidJsExtension(new MarkdownContext())
+                };
+                await Docset.Build("docfx.json", options);
 ```
 
-Script and\or carry out a package restore using the following command
+You can see an example of this in
 
-```cmd
-pushd docfx_project && npm install && popd
-```
+1. [The sample console application in this repository (github.com/dpvreony/docfx-mermaidjs/tree/main/src/Dhgms.DocFx.MermaidJs.Sample.Cmd)](https://github.com/dpvreony/docfx-mermaidjs/tree/main/src/Dhgms.DocFx.MermaidJs.Sample.Cmd)
+2. [The console application in my main documentation repository (github.com/dpvreony/documentation/tree/main/src/docfx_project)](https://github.com/dpvreony/documentation/tree/main/src/docfx_project)
 
-### Setting up DocFX
-
-Add a nuget package reference to "Dhgms.DocFX.Mermaid.Plugin" in your docfx_project
-
-Update your docfx.json to include the template. This assumes you are using the default templates for the process. You need to put this plugin BEFORE your output template.
-
-For HTML output:
-
-```json
-    "build": {
-        "template": [
-            "markdownmermaidjs",
-            "default"
-        ]
-    }
-```
-
-For PDF output:
-
-```json
-    "pdf": {
-        "template": [
-            "markdownmermaidjs",
-            "pdf.default"
-        ]
-    }
-```
-
-By default the plugin has the following behaviour:
-
-* Uses inline emdedding in the HTML
-* Creates png images
-* Runs the mermaid-cli externally
+NOTES:
+* Currently only HTML generation is supported, PDF is not supported due to a limitation in DocFX which I'm looking to resolve with a PR.
+* Only inline PNG is supported, this is due to a limitation in the plug in model and adding new files to the file cache on the fly. I may revisit this in future. The plug in itself exposes SVG data if you want to play with it.
 
 You can adjust the settings by viewing the detailed documentation.
 
-### Adding a diagram
+### 4. Adding a diagram
 
 In your markdown files add a code block with a mermaid descriptor like so:
 
