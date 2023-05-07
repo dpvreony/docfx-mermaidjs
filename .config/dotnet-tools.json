@@ -39,7 +39,7 @@
       ]
     },
     "microsoft.cst.applicationinspector.cli": {
-      "version": "1.8.6",
+      "version": "1.8.7",
       "commands": [
         "appinspector"
       ]
