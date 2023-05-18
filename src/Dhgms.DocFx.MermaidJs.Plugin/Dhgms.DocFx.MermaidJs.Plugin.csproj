@@ -10,7 +10,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="6.0.16" />
     <PackageReference Include="Microsoft.DocAsCode.Dfm" Version="2.63.1" PrivateAssets="all" />
-    <PackageReference Include="Microsoft.DocAsCode.MarkdigEngine.Extensions" Version="2.67.0" />
+    <PackageReference Include="Microsoft.DocAsCode.MarkdigEngine.Extensions" Version="2.67.1" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.3" />
     <PackageReference Include="Microsoft.Playwright" Version="1.33.0" />
     <PackageReference Include="Nito.AsyncEx" Version="5.1.2" />
