@@ -11,6 +11,7 @@ using Dhgms.DocFx.MermaidJs.Plugin.HttpServer;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Logging;
 using Microsoft.Playwright;
+using Whipstaff.Runtime.Http;
 
 namespace Dhgms.DocFx.MermaidJs.Plugin.Playwright
 {
@@ -121,7 +122,7 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Playwright
             var request = route.Request;
 
             httpRequestMessage.RequestUri = new Uri(request.Url);
-            PopulateHeaders(httpRequestMessage, request.Headers);
+            httpRequestMessage.AddHeaders(request.Headers);
 
             switch (request.Method)
             {
@@ -162,16 +163,6 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Playwright
             return httpRequestMessage;
         }
 
-        private static void PopulateHeaders(HttpRequestMessage httpRequestMessage, Dictionary<string, string> requestHeaders)
-        {
-            var targetHeaders = httpRequestMessage.Headers;
-
-            foreach (var requestHeader in requestHeaders)
-            {
-                targetHeaders.Add(requestHeader.Key, requestHeader.Value);
-            }
-        }
-
         private async Task MermaidPostHandler(IRoute route, string diagram)
         {
             using (var client = _mermaidHttpServerFactory.CreateClient())
@@ -179,16 +170,9 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Playwright
             {
                 var response = await client.SendAsync(request)
                     .ConfigureAwait(false);
-                var routeFulfillOptions = new RouteFulfillOptions
-                {
-                    Status = (int)response.StatusCode,
-                    Body = await response.Content.ReadAsStringAsync().ConfigureAwait(false),
-                };
 
-                if (response.Content.Headers.ContentType != null)
-                {
-                    routeFulfillOptions.ContentType = response.Content.Headers.ContentType.ToString();
-                }
+                var routeFulfillOptions = await Whipstaff.Playwright.RouteFulfillOptionsFactory.FromHttpResponseMessageAsync(response)
+                    .ConfigureAwait(false);
 
                 await route.FulfillAsync(routeFulfillOptions)
                     .ConfigureAwait(false);
@@ -216,16 +200,8 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Playwright
                 var response = await client.SendAsync(request)
                     .ConfigureAwait(false);
 
-                var routeFulfillOptions = new RouteFulfillOptions
-                {
-                    Status = (int)response.StatusCode,
-                    Body = await response.Content.ReadAsStringAsync().ConfigureAwait(false),
-                };
-
-                if (response.Content.Headers.ContentType != null)
-                {
-                    routeFulfillOptions.ContentType = response.Content.Headers.ContentType.ToString();
-                }
+                var routeFulfillOptions = await Whipstaff.Playwright.RouteFulfillOptionsFactory.FromHttpResponseMessageAsync(response)
+                    .ConfigureAwait(false);
 
                 await route.FulfillAsync(routeFulfillOptions)
                     .ConfigureAwait(false);
