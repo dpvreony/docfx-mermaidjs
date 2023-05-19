@@ -140,6 +140,7 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Playwright
                     break;
                 case "PATCH":
                     httpRequestMessage.Method = HttpMethod.Patch;
+
                     break;
                 case "POST":
                     httpRequestMessage.Method = HttpMethod.Post;

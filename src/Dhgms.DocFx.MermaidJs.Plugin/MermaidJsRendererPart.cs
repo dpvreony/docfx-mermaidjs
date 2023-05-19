@@ -197,7 +197,7 @@ namespace Dhgms.DocFx.MermaidJs.Plugin
                 _ = Directory.CreateDirectory(targetDir);
             }
 
-            TemporaryFileHelpers.WithTempFile(
+            Whipstaff.Runtime.FileProcessing.TemporaryFileHelpers.WithTempFile(
                 byteArray,
                 ".mmd",
                 fileName => RunProcessWithTempFile(fileName, command, outputFilename, rootPath),
