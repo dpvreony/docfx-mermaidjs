@@ -172,9 +172,9 @@ jobs:
       env:
         VIRUSTOTAL_API_KEY: ${{ secrets.VIRUSTOTAL_API_KEY }}
 
-    - name: Generate App Inspector Report
-      run: |
-        dotnet appinspector analyze -s src -f html -o artifacts\appinspector\appinspector.html
+    #- name: Generate App Inspector Report
+    #  run: |
+    #    dotnet appinspector analyze -s src -f html -o artifacts\appinspector\appinspector.html
 
     # only store binlog on failure
     - name: store binlogs
