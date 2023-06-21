@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.DocAsCode.App" Version="2.67.3" />
+    <PackageReference Include="Microsoft.DocAsCode.App" Version="2.67.5" />
   </ItemGroup>
 
   <ItemGroup>
