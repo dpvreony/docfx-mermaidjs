@@ -134,12 +134,6 @@ jobs:
         echo "::notice::$coverageMessage"
         echo $coverageMessage >> $GITHUB_STEP_SUMMARY
 
-    - name: Train Intellicode Model
-      uses: microsoft/vs-intellicode@v1
-      if: github.ref == 'refs/heads/main'
-      with:
-        directory: src
-
     - name: List licenses
       run: |
         dotnet dotnet-project-licenses -i src --export-license-texts --output-directory artifacts/licenses
