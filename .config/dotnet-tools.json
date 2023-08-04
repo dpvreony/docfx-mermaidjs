@@ -51,7 +51,7 @@
       ]
     },
     "docfx": {
-      "version": "2.67.5",
+      "version": "2.70.0",
       "commands": [
         "docfx"
       ]
