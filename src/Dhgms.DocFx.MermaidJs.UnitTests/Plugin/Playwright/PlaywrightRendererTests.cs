@@ -88,8 +88,7 @@ namespace Dhgms.DocFx.MermaidJs.UnitTests.Plugin.Playwright
             public async Task ThrowsArgumentNullExceptionAsync(string arg, string expectedParameterNameForException)
             {
                 var instance = new PlaywrightRenderer(Log);
-                var exception = await Assert.ThrowsAsync<ArgumentNullException>(() => instance.GetDiagram(arg))
-                    .ConfigureAwait(false);
+                var exception = await Assert.ThrowsAsync<ArgumentNullException>(() => instance.GetDiagram(arg));
 
                 Assert.Equal(expectedParameterNameForException, exception.ParamName);
             }
@@ -105,7 +104,7 @@ namespace Dhgms.DocFx.MermaidJs.UnitTests.Plugin.Playwright
             public async Task ReturnsResult(string diagram, string expectedStart)
             {
                 var instance = new PlaywrightRenderer(Log);
-                var diagramResponseModel = await instance.GetDiagram(diagram).ConfigureAwait(false);
+                var diagramResponseModel = await instance.GetDiagram(diagram);
 
                 Assert.NotNull(diagramResponseModel);
 
