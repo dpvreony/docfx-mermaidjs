@@ -38,10 +38,10 @@ jobs:
         distribution: 'temurin' # See 'Supported distributions' for available options
         java-version: '17'
 
-    - name: Install .NET 6
+    - name: Install .NET 8
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 6.0.x
+        dotnet-version: 8.0.x
 
     - name: Add MSBuild to PATH
       uses: microsoft/setup-msbuild@3404ff3d40458f8d1fdf55c2bcc442b970404ad7
@@ -75,13 +75,15 @@ jobs:
 
     - name: List Deprecated Packages
       run: |
-        dotnet list ${{ env.solutionpath }} package --deprecated
+        dotnet list package --deprecated
         # TODO: pipe to text file, echo text file and error level fail build if not empty file?
+      working-directory: src
 
     - name: List Vulnerable Packages
       run: |
-        dotnet list ${{ env.solutionpath }} package --vulnerable
+        dotnet list package --vulnerable
         # TODO: pipe to text file, echo text file and error level fail build if not empty file?
+      working-directory: src
 
     - name: NPM package restore
       run: |

@@ -46,10 +46,10 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: Install .NET 6
+    - name: Install .NET 8
       uses: actions/setup-dotnet@v3
       with:
-        dotnet-version: 6.0.x
+        dotnet-version: 8.0.x
 
     - name: Add MSBuild to PATH
       uses: glennawatson/setup-msbuild@v1.0.3
