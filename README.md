@@ -23,8 +23,6 @@ This DocFX MermaidJS plugin is a wrapper around the mermaid NPM package. It is a
 
 ## Getting Started
 
-v2 of this plug in only supports MarkDig, due to DocFx 2.60 deprecating support for DFM. The plug in model is significantly different in v2.60 as well and requires you to have your own application to run the DocFX generation.
-
 ### 1. Create a console application (or similar)
 ### 2. Add a nuget package reference to "Dhgms.DocFX.Mermaid.Plugin" in your docfx_project
 ### 3. Add the following initialisation
@@ -44,7 +42,6 @@ You can see an example of this in
 2. [The console application in my main documentation repository (github.com/dpvreony/documentation/tree/main/src/docfx_project)](https://github.com/dpvreony/documentation/tree/main/src/docfx_project)
 
 NOTES:
-* Currently only HTML generation is supported, PDF is not supported due to a breaking change in DocFX 2.60 which I'm looking to resolve with a PR.
 * Only inline PNG is supported, this is due to a limitation in the plug in model and adding new files to the file cache on the fly. I may revisit this in future. The plug in itself exposes SVG data if you want to play with it.
 
 You can adjust the settings by viewing the detailed documentation.
@@ -76,7 +73,7 @@ graph TD;
 
 ## Viewing the documentation
 
-The documentation can be found at https://dpvreony.github.io/docfx-mermaidjs/
+The documentation can be found at https://docs.dpvreony.com/projects/docfx-mermaidjs/
 
 ## Contributing to the code
 
