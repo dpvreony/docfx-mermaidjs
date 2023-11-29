@@ -49,8 +49,7 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Playwright
                 .ConfigureAwait(false))
             await using (var browser = await playwright.Chromium.LaunchAsync(new()
                          {
-                             Headless = true,
-                             Channel = "chrome"
+                             Headless = true
                          }))
             {
                 var page = await browser.NewPageAsync()
