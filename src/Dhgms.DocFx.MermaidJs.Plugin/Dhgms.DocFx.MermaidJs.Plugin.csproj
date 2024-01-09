@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="6.0.25" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="6.0.26" />
     <PackageReference Include="Microsoft.DocAsCode.MarkdigEngine.Extensions" Version="2.67.5" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.4" />
     <PackageReference Include="Microsoft.Playwright" Version="1.40.0" />
