@@ -23,7 +23,7 @@ namespace Dhgms.DocFx.MermaidJs.IntegrationTests.HttpServer
         public MermaidHttpServerFactoryTests(ITestOutputHelper output)
             : base(output)
         {
-            Log.MinimumLevel = LogLevel.Trace;
+            Log.DefaultMinimumLevel = LogLevel.Trace;
         }
 
         /// <summary>
