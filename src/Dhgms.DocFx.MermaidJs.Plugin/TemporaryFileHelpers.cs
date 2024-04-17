@@ -26,10 +26,7 @@ namespace Dhgms.DocFx.MermaidJs.Plugin
             Action<string> fileAction,
             bool skipDeleteException)
         {
-            if (fileAsBytes == null)
-            {
-                throw new ArgumentNullException(nameof(fileAsBytes));
-            }
+            ArgumentNullException.ThrowIfNull(fileAsBytes);
 
             if (string.IsNullOrWhiteSpace(fileExtension)
                 || !Path.GetExtension(fileExtension).Equals(fileExtension, StringComparison.Ordinal))
@@ -37,10 +34,7 @@ namespace Dhgms.DocFx.MermaidJs.Plugin
                 throw new ArgumentNullException(nameof(fileExtension));
             }
 
-            if (fileAction == null)
-            {
-                throw new ArgumentNullException(nameof(fileAction));
-            }
+            ArgumentNullException.ThrowIfNull(fileAction);
 
             var tempFileName = GetTempFile(fileAsBytes, fileExtension);
 
@@ -84,10 +78,7 @@ namespace Dhgms.DocFx.MermaidJs.Plugin
             Func<string, TResult> fileAction,
             bool skipDeleteException)
         {
-            if (fileAsBytes == null)
-            {
-                throw new ArgumentNullException(nameof(fileAsBytes));
-            }
+            ArgumentNullException.ThrowIfNull(fileAsBytes);
 
             if (string.IsNullOrWhiteSpace(fileExtension)
                 || !Path.GetExtension(fileExtension).Equals(fileExtension, StringComparison.Ordinal))
@@ -95,10 +86,7 @@ namespace Dhgms.DocFx.MermaidJs.Plugin
                 throw new ArgumentNullException(nameof(fileExtension));
             }
 
-            if (fileAction == null)
-            {
-                throw new ArgumentNullException(nameof(fileAction));
-            }
+            ArgumentNullException.ThrowIfNull(fileAction);
 
             var tempFileName = GetTempFile(fileAsBytes, fileExtension);
 

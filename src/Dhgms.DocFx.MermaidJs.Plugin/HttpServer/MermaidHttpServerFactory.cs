@@ -75,9 +75,22 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.HttpServer
         private static async Task Handler(HttpContext context)
         {
             var request = context.Request;
-            var diagram = request.Form["diagram"];
-
             var response = context.Response;
+
+            var diagramFormStringValues = request.Form["diagram"];
+            if (diagramFormStringValues.Count < 1)
+            {
+                await WriteNoDiagramResponse(response).ConfigureAwait(false);
+                return;
+            }
+
+            var diagram = diagramFormStringValues[0];
+            if (string.IsNullOrWhiteSpace(diagram))
+            {
+                await WriteNoDiagramResponse(response).ConfigureAwait(false);
+                return;
+            }
+
             response.StatusCode = 200;
             response.ContentType = "text/html";
 
@@ -102,6 +115,13 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.HttpServer
 
             await response.WriteAsync(sb.ToString())
                 .ConfigureAwait(false);
+        }
+
+        private static async Task WriteNoDiagramResponse(HttpResponse response)
+        {
+            response.StatusCode = 400;
+            response.ContentType = "text/plain";
+            await response.WriteAsync("No diagram passed in request").ConfigureAwait(false);
         }
 
         private static void Configuration(IApplicationBuilder obj)
