@@ -3,17 +3,14 @@
 // See the LICENSE file in the project root for full license information.
 
 using System;
-using System.IO;
+using Castle.Core.Logging;
 using Dhgms.DocFx.MermaidJs.Plugin.Markdig;
-using Dhgms.DocFx.MermaidJs.Plugin.Playwright;
 using Markdig;
-using Markdig.Parsers;
-using Markdig.Renderers;
-using Markdig.Syntax;
 using Microsoft.DocAsCode.MarkdigEngine.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using NetTestRegimentation;
+using Whipstaff.Mermaid.HttpServer;
 using Whipstaff.Mermaid.Playwright;
 using Xunit;
 using Xunit.Abstractions;
@@ -43,7 +40,15 @@ namespace Dhgms.DocFx.MermaidJs.UnitTests.Plugin.Markdig
             [Fact]
             public void ReturnsInstance()
             {
-                var instance = new HtmlMermaidJsRenderer(new MarkdownContext(), new PlaywrightRenderer(Log));
+                var mermaidHttpServer = MermaidHttpServerFactory.GetTestServer(Log);
+                var logMessageActions = new PlaywrightRendererLogMessageActions();
+                var logMessageActionsWrapper = new PlaywrightRendererLogMessageActionsWrapper(
+                    logMessageActions,
+                    Log.CreateLogger<PlaywrightRenderer>());
+                var playwrightRenderer = new PlaywrightRenderer(
+                    mermaidHttpServer,
+                    logMessageActionsWrapper);
+                var instance = new HtmlMermaidJsRenderer(new MarkdownContext(), playwrightRenderer);
                 Assert.NotNull(instance);
             }
 
@@ -68,7 +73,13 @@ namespace Dhgms.DocFx.MermaidJs.UnitTests.Plugin.Markdig
                 public ThrowsArgumentNullExceptionTestSource()
                 {
 #pragma warning disable CA2000 // Dispose objects before losing scope
-                    Add(null, new PlaywrightRenderer(new NullLoggerFactory()), "markdownContext");
+                    var mermaidHttpServer = MermaidHttpServerFactory.GetTestServer(new NullLoggerFactory());
+                    var logMessageActions = new PlaywrightRendererLogMessageActions();
+                    var logMessageActionsWrapper = new PlaywrightRendererLogMessageActionsWrapper(
+                        logMessageActions,
+                        new NullLogger<PlaywrightRenderer>());
+
+                    Add(null, new PlaywrightRenderer(mermaidHttpServer, logMessageActionsWrapper), "markdownContext");
 #pragma warning restore CA2000 // Dispose objects before losing scope
                     Add(new MarkdownContext(), null, "playwrightRenderer");
                 }
