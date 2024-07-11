@@ -85,12 +85,6 @@ jobs:
         # TODO: pipe to text file, echo text file and error level fail build if not empty file?
       working-directory: src
 
-    - name: NPM package restore
-      run: |
-        pushd src\Dhgms.DocFx.MermaidJs.Plugin\
-        npm install
-        popd
-
     - name: Run Sonar Scanner begin
       if: env.SONAR_TOKEN != '' && env.SONAR_PROJECT_KEY != '' && env.SONAR_ORGANISATION_KEY != ''
       run: |

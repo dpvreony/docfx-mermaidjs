@@ -4,16 +4,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Dhgms.DocFx.MermaidJs.Plugin.Playwright;
-using Markdig.Parsers;
 using Markdig.Renderers;
 using Markdig.Renderers.Html;
-using Markdig.Syntax;
 using Microsoft.DocAsCode.MarkdigEngine.Extensions;
 using Nito.AsyncEx.Synchronous;
+using Whipstaff.Mermaid.Playwright;
+using Whipstaff.Playwright;
 
 namespace Dhgms.DocFx.MermaidJs.Plugin.Markdig
 {
@@ -55,7 +51,10 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Markdig
             */
 
             var mermaidMarkup = obj.Lines.ToSlice().Text;
-            var responseModel = _playwrightRenderer.GetDiagram(mermaidMarkup).WaitAndUnwrapException();
+            var responseModel = _playwrightRenderer.GetDiagram(
+                mermaidMarkup,
+                PlaywrightBrowserType.Chromium,
+                null).WaitAndUnwrapException();
 
             if (responseModel == null)
             {

@@ -1,7 +1,0 @@
-{
-    "name": "mermaidjs-plugin",
-    "version": "1.0.0",
-    "dependencies": {
-        "mermaid": "10.9.1"
-    }
-}

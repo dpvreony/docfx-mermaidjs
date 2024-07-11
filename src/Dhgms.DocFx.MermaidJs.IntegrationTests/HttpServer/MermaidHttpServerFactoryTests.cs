@@ -2,6 +2,7 @@
 // This file is licensed to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
+#if TBC
 using Dhgms.DocFx.MermaidJs.Plugin.HttpServer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
@@ -71,3 +72,4 @@ namespace Dhgms.DocFx.MermaidJs.IntegrationTests.HttpServer
         }
     }
 }
+#endif

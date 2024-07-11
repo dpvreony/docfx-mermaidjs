@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Whipstaff.Mermaid" Version="8.0.91" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Dhgms.DocFx.MermaidJs.Plugin\Dhgms.DocFx.MermaidJs.Plugin.csproj" />
     <ProjectReference Include="..\Dhgms.DocFx.MermaidJs.Sample.Cmd\Dhgms.DocFx.MermaidJs.Sample.Cmd.csproj" />
   </ItemGroup>

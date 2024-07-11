@@ -3,12 +3,12 @@
 // See the LICENSE file in the project root for full license information.
 
 using System;
-using Dhgms.DocFx.MermaidJs.Plugin.Playwright;
 using Markdig;
 using Markdig.Renderers;
-using Markdig.Renderers.Html;
 using Microsoft.DocAsCode.MarkdigEngine.Extensions;
 using Microsoft.Extensions.Logging;
+using Whipstaff.Mermaid.HttpServer;
+using Whipstaff.Mermaid.Playwright;
 
 namespace Dhgms.DocFx.MermaidJs.Plugin.Markdig
 {
@@ -57,7 +57,19 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Markdig
             if (renderer is HtmlRenderer htmlRenderer)
             {
                 // Must be inserted before FencedCodeBlockRenderer
-                htmlRenderer.ObjectRenderers.Insert(0, new HtmlMermaidJsRenderer(_context, new PlaywrightRenderer(_loggerFactory)));
+                var mermaidHttpServer = MermaidHttpServerFactory.GetTestServer(_loggerFactory);
+                var logMessageActions = new PlaywrightRendererLogMessageActions();
+                var logMessageActionsWrapper = new PlaywrightRendererLogMessageActionsWrapper(
+                    logMessageActions,
+                    _loggerFactory.CreateLogger<PlaywrightRenderer>());
+                var playwrightRenderer = new PlaywrightRenderer(
+                    mermaidHttpServer,
+                    logMessageActionsWrapper);
+
+                var htmlMermaidJsRenderer = new HtmlMermaidJsRenderer(
+                    _context,
+                    playwrightRenderer);
+                htmlRenderer.ObjectRenderers.Insert(0, htmlMermaidJsRenderer);
             }
         }
     }
