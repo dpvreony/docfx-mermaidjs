@@ -14,6 +14,7 @@ using Microsoft.DocAsCode.MarkdigEngine.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using NetTestRegimentation;
+using Whipstaff.Mermaid.Playwright;
 using Xunit;
 using Xunit.Abstractions;
 
