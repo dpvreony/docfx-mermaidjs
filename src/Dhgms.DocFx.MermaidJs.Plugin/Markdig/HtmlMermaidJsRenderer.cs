@@ -53,8 +53,7 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Markdig
             var mermaidMarkup = obj.Lines.ToSlice().Text;
             var responseModel = _playwrightRenderer.GetDiagram(
                 mermaidMarkup,
-                PlaywrightBrowserType.Chromium,
-                null).WaitAndUnwrapException();
+                PlaywrightBrowserTypeAndChannel.ChromiumDefault()).WaitAndUnwrapException();
 
             if (responseModel == null)
             {
