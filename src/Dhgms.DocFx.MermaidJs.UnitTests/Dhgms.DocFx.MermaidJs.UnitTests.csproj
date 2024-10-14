@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Whipstaff.Mermaid" Version="8.0.144" />
+    <PackageReference Include="Whipstaff.Mermaid" Version="8.0.212" />
   </ItemGroup>
 
   <ItemGroup>
