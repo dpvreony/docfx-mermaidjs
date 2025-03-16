@@ -1,0 +1,20 @@
+name: .NET Core
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
+    branches: [ main ]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    permissions:
+      contents: none
+    uses: dpvreony/.github/tree/main/.github/workflows/common/dotnet-ci@73ecb1e7e0a3a65cbd33acea36a4e3b2d5df53d2
+    with:
+      solutionName: "Dhgms.DocFx.MermaidJs"
+
