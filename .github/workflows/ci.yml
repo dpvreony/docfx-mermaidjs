@@ -13,7 +13,9 @@ permissions:
 jobs:
   build:
     permissions:
-      contents: none
+      actions: read
+      contents: read
+      deployments: read
     uses: dpvreony/.github/.github/workflows/dotnet-ci.yml@652cd8c2f43d294df68376b130a6be776050da86
     with:
       solutionName: "Dhgms.DocFx.MermaidJs"
