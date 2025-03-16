@@ -21,7 +21,7 @@
       ]
     },
     "dotnet-sonarscanner": {
-      "version": "9.0.2",
+      "version": "9.2.1",
       "commands": [
         "dotnet-sonarscanner"
       ]
