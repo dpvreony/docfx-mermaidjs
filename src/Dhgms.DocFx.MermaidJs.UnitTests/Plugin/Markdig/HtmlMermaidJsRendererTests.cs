@@ -13,7 +13,6 @@ using NetTestRegimentation;
 using Whipstaff.Mermaid.HttpServer;
 using Whipstaff.Mermaid.Playwright;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace Dhgms.DocFx.MermaidJs.UnitTests.Plugin.Markdig
 {
@@ -25,7 +24,7 @@ namespace Dhgms.DocFx.MermaidJs.UnitTests.Plugin.Markdig
         /// <summary>
         /// Unit tests for the constructor.
         /// </summary>
-        public sealed class ConstructorMethod : Foundatio.Xunit.TestWithLoggingBase, ITestConstructorMethodWithNullableParameters<MarkdownContext, PlaywrightRenderer>
+        public sealed class ConstructorMethod : TestWithLoggingBase, ITestConstructorMethodWithNullableParameters<MarkdownContext, PlaywrightRenderer>
         {
             /// <summary>
             /// Initializes a new instance of the <see cref="ConstructorMethod"/> class.
