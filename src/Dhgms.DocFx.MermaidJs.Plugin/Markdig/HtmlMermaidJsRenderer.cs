@@ -4,6 +4,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime;
+using Dhgms.DocFx.MermaidJs.Plugin.Settings;
 using Markdig.Renderers;
 using Markdig.Renderers.Html;
 using Microsoft.DocAsCode.MarkdigEngine.Extensions;
@@ -20,18 +22,25 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Markdig
     {
         private readonly MarkdownContext _markdownContext;
         private readonly PlaywrightRenderer _playwrightRenderer;
+        private readonly MarkdownJsExtensionSettings _settings;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HtmlMermaidJsRenderer"/> class.
         /// </summary>
         /// <param name="markdownContext">DocFX Markdown context.</param>
+        /// <param name="settings">Settings for the Markdown JS extension.</param>
         /// <param name="playwrightRenderer">Playwright Renderer used to generate mermaid.</param>
-        public HtmlMermaidJsRenderer(MarkdownContext markdownContext, PlaywrightRenderer playwrightRenderer)
+        public HtmlMermaidJsRenderer(
+            MarkdownContext markdownContext,
+            MarkdownJsExtensionSettings settings,
+            PlaywrightRenderer playwrightRenderer)
         {
             ArgumentNullException.ThrowIfNull(markdownContext);
+            ArgumentNullException.ThrowIfNull(settings);
             ArgumentNullException.ThrowIfNull(playwrightRenderer);
 
             _markdownContext = markdownContext;
+            _settings = settings;
             _playwrightRenderer = playwrightRenderer;
         }
 

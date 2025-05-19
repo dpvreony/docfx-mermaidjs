@@ -5,6 +5,7 @@
 using System;
 using Castle.Core.Logging;
 using Dhgms.DocFx.MermaidJs.Plugin.Markdig;
+using Dhgms.DocFx.MermaidJs.Plugin.Settings;
 using Markdig;
 using Microsoft.DocAsCode.MarkdigEngine.Extensions;
 using Microsoft.Extensions.Logging;
@@ -25,7 +26,7 @@ namespace Dhgms.DocFx.MermaidJs.UnitTests.Plugin.Markdig
         /// <summary>
         /// Unit tests for the constructor.
         /// </summary>
-        public sealed class ConstructorMethod : Foundatio.Xunit.TestWithLoggingBase, ITestConstructorMethodWithNullableParameters<MarkdownContext, PlaywrightRenderer>
+        public sealed class ConstructorMethod : Foundatio.Xunit.TestWithLoggingBase, ITestConstructorMethodWithNullableParameters<MarkdownContext, MarkdownJsExtensionSettings, PlaywrightRenderer>
         {
             /// <summary>
             /// Initializes a new instance of the <see cref="ConstructorMethod"/> class.
@@ -48,16 +49,19 @@ namespace Dhgms.DocFx.MermaidJs.UnitTests.Plugin.Markdig
                 var playwrightRenderer = new PlaywrightRenderer(
                     mermaidHttpServer,
                     logMessageActionsWrapper);
-                var instance = new HtmlMermaidJsRenderer(new MarkdownContext(), playwrightRenderer);
+
+                var settings = new MarkdownJsExtensionSettings(OutputMode.Png);
+
+                var instance = new HtmlMermaidJsRenderer(new MarkdownContext(), settings, playwrightRenderer);
                 Assert.NotNull(instance);
             }
 
             /// <inheritdoc/>
             [Theory]
             [ClassData(typeof(ThrowsArgumentNullExceptionTestSource))]
-            public void ThrowsArgumentNullException(MarkdownContext arg1, PlaywrightRenderer arg2, string expectedParameterNameForException)
+            public void ThrowsArgumentNullException(MarkdownContext arg1, MarkdownJsExtensionSettings arg2, PlaywrightRenderer arg3, string expectedParameterNameForException)
             {
-                var exception = Assert.Throws<ArgumentNullException>(() => new HtmlMermaidJsRenderer(arg1, arg2));
+                var exception = Assert.Throws<ArgumentNullException>(() => new HtmlMermaidJsRenderer(arg1, arg2, arg3));
 
                 Assert.Equal(expectedParameterNameForException, exception.ParamName);
             }
@@ -65,7 +69,7 @@ namespace Dhgms.DocFx.MermaidJs.UnitTests.Plugin.Markdig
             /// <summary>
             /// Test source for <see cref="ThrowsArgumentNullException"/>.
             /// </summary>
-            public sealed class ThrowsArgumentNullExceptionTestSource : TheoryData<MarkdownContext?, PlaywrightRenderer?, string>
+            public sealed class ThrowsArgumentNullExceptionTestSource : TheoryData<MarkdownContext?, MarkdownJsExtensionSettings?, PlaywrightRenderer?, string>
             {
                 /// <summary>
                 /// Initializes a new instance of the <see cref="ThrowsArgumentNullExceptionTestSource"/> class.
@@ -79,9 +83,10 @@ namespace Dhgms.DocFx.MermaidJs.UnitTests.Plugin.Markdig
                         logMessageActions,
                         new NullLogger<PlaywrightRenderer>());
 
-                    Add(null, new PlaywrightRenderer(mermaidHttpServer, logMessageActionsWrapper), "markdownContext");
+                    Add(null, new MarkdownJsExtensionSettings(OutputMode.Png), new PlaywrightRenderer(mermaidHttpServer, logMessageActionsWrapper), "markdownContext");
+                    Add(null, null, new PlaywrightRenderer(mermaidHttpServer, logMessageActionsWrapper), "markdownContext");
 #pragma warning restore CA2000 // Dispose objects before losing scope
-                    Add(new MarkdownContext(), null, "playwrightRenderer");
+                    Add(new MarkdownContext(), new MarkdownJsExtensionSettings(OutputMode.Png), null, "playwrightRenderer");
                 }
             }
         }
