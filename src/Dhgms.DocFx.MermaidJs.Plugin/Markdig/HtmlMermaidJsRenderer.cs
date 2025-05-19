@@ -98,8 +98,6 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Markdig
                     .Write("</div>")
                     .EnsureLine();
             }
-
-            return;
         }
     }
 }

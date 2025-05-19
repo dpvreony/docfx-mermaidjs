@@ -4,6 +4,7 @@
 
 using System.Threading.Tasks;
 using Dhgms.DocFx.MermaidJs.Plugin.Markdig;
+using Dhgms.DocFx.MermaidJs.Plugin.Settings;
 using Microsoft.DocAsCode;
 using Microsoft.DocAsCode.MarkdigEngine.Extensions;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -26,14 +27,16 @@ namespace Dhgms.DocFx.MermaidJs.Sample.Cmd
                 var options = new BuildOptions
                 {
                     // Enable MermaidJS markdown extension
-                    ConfigureMarkdig = pipeline => pipeline.UseMermaidJsExtension(new MarkdownContext())
+                    ConfigureMarkdig = pipeline => pipeline.UseMermaidJsExtension(new MarkdownContext(), new MarkdownJsExtensionSettings(OutputMode.Svg), new NullLoggerFactory())
                 };
                 await Docset.Build("docfx.json", options);
             }
 #pragma warning disable CA1031
-            catch
-#pragma warning restore CA1031
+            catch (System.Exception ex)
             {
+#pragma warning restore CA1031
+                // Handle exceptions here
+                System.Console.WriteLine($"An error occurred: {ex.Message}");
                 return 1;
             }
 
