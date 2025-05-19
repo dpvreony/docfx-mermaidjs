@@ -69,24 +69,36 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Markdig
                 return;
             }
 
-            var imageBase64 = Convert.ToBase64String(responseModel.Png);
-
-            var properties = new List<KeyValuePair<string, string?>>
+            if (_settings.OutputMode == OutputMode.Png)
             {
-                new("alt", "Mermaid Diagram"),
-                new("src", $"data:image/png;base64,{imageBase64}")
-            };
+                var imageBase64 = Convert.ToBase64String(responseModel.Png);
 
-            var attributes = new HtmlAttributes
+                var properties = new List<KeyValuePair<string, string?>>
+                {
+                    new("alt", "Mermaid Diagram"),
+                    new("src", $"data:image/png;base64,{imageBase64}")
+                };
+
+                var attributes = new HtmlAttributes
+                {
+                    Properties = properties
+                };
+
+                _ = renderer.Write("<img")
+                    .WriteAttributes(attributes)
+                    .Write('>');
+
+                _ = renderer.EnsureLine();
+            }
+            else
             {
-                Properties = properties
-            };
+                var svg = responseModel.Svg;
+                _ = renderer.Write("<div>")
+                    .Write(svg)
+                    .Write("</div>")
+                    .EnsureLine();
+            }
 
-            _ = renderer.Write("<img")
-                .WriteAttributes(attributes)
-                .Write('>');
-
-            _ = renderer.EnsureLine();
             return;
         }
     }
