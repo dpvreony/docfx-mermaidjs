@@ -4,11 +4,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.Runtime;
-using Dhgms.DocFx.MermaidJs.Plugin.Settings;
+using System.Threading.Tasks;
+using Docfx.MarkdigEngine.Extensions;
 using Markdig.Renderers;
 using Markdig.Renderers.Html;
-using Microsoft.DocAsCode.MarkdigEngine.Extensions;
 using Nito.AsyncEx.Synchronous;
 using Whipstaff.Mermaid.Playwright;
 using Whipstaff.Playwright;
@@ -22,26 +21,45 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Markdig
     {
         private readonly MarkdownContext _markdownContext;
         private readonly PlaywrightRenderer _playwrightRenderer;
-        private readonly MarkdownJsExtensionSettings _settings;
+        private readonly PlaywrightRendererBrowserInstance _browserSession;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HtmlMermaidJsRenderer"/> class.
         /// </summary>
         /// <param name="markdownContext">DocFX Markdown context.</param>
-        /// <param name="settings">Settings for the Markdown JS extension.</param>
         /// <param name="playwrightRenderer">Playwright Renderer used to generate mermaid.</param>
-        public HtmlMermaidJsRenderer(
+        /// <param name="browserSession">Browser session to render diagrams. Passed in as a cached object to reduce time on rendering multiple diagrams.</param>
+        private HtmlMermaidJsRenderer(
             MarkdownContext markdownContext,
-            MarkdownJsExtensionSettings settings,
+            PlaywrightRenderer playwrightRenderer,
+            PlaywrightRendererBrowserInstance browserSession)
+        {
+            ArgumentNullException.ThrowIfNull(markdownContext);
+            ArgumentNullException.ThrowIfNull(playwrightRenderer);
+            ArgumentNullException.ThrowIfNull(browserSession);
+
+            _markdownContext = markdownContext;
+            _playwrightRenderer = playwrightRenderer;
+            _browserSession = browserSession;
+        }
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="HtmlMermaidJsRenderer"/> class.
+        /// </summary>
+        /// <param name="markdownContext">Markdown DocFx Context.</param>
+        /// <param name="playwrightRenderer">Playwright MermaidJS Renderer.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public static async Task<HtmlMermaidJsRenderer> CreateAsync(
+            MarkdownContext markdownContext,
             PlaywrightRenderer playwrightRenderer)
         {
             ArgumentNullException.ThrowIfNull(markdownContext);
-            ArgumentNullException.ThrowIfNull(settings);
             ArgumentNullException.ThrowIfNull(playwrightRenderer);
 
-            _markdownContext = markdownContext;
-            _settings = settings;
-            _playwrightRenderer = playwrightRenderer;
+            return new HtmlMermaidJsRenderer(
+                markdownContext,
+                playwrightRenderer,
+                await playwrightRenderer.GetBrowserSessionAsync(PlaywrightBrowserTypeAndChannel.ChromiumDefault()));
         }
 
         /// <inheritdoc/>
@@ -60,44 +78,33 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Markdig
             */
 
             var mermaidMarkup = obj.Lines.ToSlice().Text;
-            var responseModel = _playwrightRenderer.GetDiagram(
-                mermaidMarkup,
-                PlaywrightBrowserTypeAndChannel.ChromiumDefault()).WaitAndUnwrapException();
+            var responseModel = _browserSession.GetDiagram(mermaidMarkup)
+                .WaitAndUnwrapException();
 
             if (responseModel == null)
             {
                 return;
             }
 
-            if (_settings.OutputMode == OutputMode.Png)
+            var imageBase64 = Convert.ToBase64String(responseModel.Png);
+
+            var properties = new List<KeyValuePair<string, string?>>
             {
-                var imageBase64 = Convert.ToBase64String(responseModel.Png);
+                new("alt", "Mermaid Diagram"),
+                new("src", $"data:image/png;base64,{imageBase64}")
+            };
 
-                var properties = new List<KeyValuePair<string, string?>>
-                {
-                    new("alt", "Mermaid Diagram"),
-                    new("src", $"data:image/png;base64,{imageBase64}")
-                };
-
-                var attributes = new HtmlAttributes
-                {
-                    Properties = properties
-                };
-
-                _ = renderer.Write("<img")
-                    .WriteAttributes(attributes)
-                    .Write('>');
-
-                _ = renderer.EnsureLine();
-            }
-            else
+            var attributes = new HtmlAttributes
             {
-                var svg = responseModel.Svg;
-                _ = renderer.Write("<div>")
-                    .Write(svg)
-                    .Write("</div>")
-                    .EnsureLine();
-            }
+                Properties = properties
+            };
+
+            _ = renderer.Write("<img")
+                .WriteAttributes(attributes)
+                .Write('>');
+
+            _ = renderer.EnsureLine();
+            return;
         }
     }
 }

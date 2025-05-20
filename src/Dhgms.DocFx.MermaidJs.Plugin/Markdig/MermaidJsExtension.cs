@@ -4,12 +4,14 @@
 
 using System;
 using Dhgms.DocFx.MermaidJs.Plugin.Settings;
+using Docfx.MarkdigEngine.Extensions;
 using Markdig;
 using Markdig.Renderers;
-using Microsoft.DocAsCode.MarkdigEngine.Extensions;
 using Microsoft.Extensions.Logging;
+using Nito.AsyncEx.Synchronous;
 using Whipstaff.Mermaid.HttpServer;
 using Whipstaff.Mermaid.Playwright;
+using Whipstaff.Playwright;
 
 namespace Dhgms.DocFx.MermaidJs.Plugin.Markdig
 {
@@ -74,10 +76,11 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Markdig
                     mermaidHttpServer,
                     logMessageActionsWrapper);
 
-                var htmlMermaidJsRenderer = new HtmlMermaidJsRenderer(
+                var htmlMermaidJsRenderer = HtmlMermaidJsRenderer.CreateAsync(
                     _context,
                     _settings,
-                    playwrightRenderer);
+                    playwrightRenderer).WaitAndUnwrapException();
+
                 htmlRenderer.ObjectRenderers.Insert(0, htmlMermaidJsRenderer);
             }
         }

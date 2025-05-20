@@ -5,8 +5,7 @@
 using System.Threading.Tasks;
 using Dhgms.DocFx.MermaidJs.Plugin.Markdig;
 using Dhgms.DocFx.MermaidJs.Plugin.Settings;
-using Microsoft.DocAsCode;
-using Microsoft.DocAsCode.MarkdigEngine.Extensions;
+using Docfx.MarkdigEngine.Extensions;
 using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Dhgms.DocFx.MermaidJs.Sample.Cmd

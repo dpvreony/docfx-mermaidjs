@@ -3,16 +3,19 @@
 // See the LICENSE file in the project root for full license information.
 
 using System;
+using System.Threading.Tasks;
 using Castle.Core.Logging;
 using Dhgms.DocFx.MermaidJs.Plugin.Markdig;
 using Dhgms.DocFx.MermaidJs.Plugin.Settings;
+using Docfx.MarkdigEngine.Extensions;
 using Markdig;
-using Microsoft.DocAsCode.MarkdigEngine.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using NetTestRegimentation;
+using Nito.AsyncEx.Synchronous;
 using Whipstaff.Mermaid.HttpServer;
 using Whipstaff.Mermaid.Playwright;
+using Whipstaff.Playwright;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -24,22 +27,25 @@ namespace Dhgms.DocFx.MermaidJs.UnitTests.Plugin.Markdig
     public static class HtmlMermaidJsRendererTests
     {
         /// <summary>
-        /// Unit tests for the constructor.
+        /// Unit tests for the <see cref="HtmlMermaidJsRenderer.CreateAsync"/> method.
         /// </summary>
         public sealed class ConstructorMethod : Foundatio.Xunit.TestWithLoggingBase, ITestConstructorMethodWithNullableParameters<MarkdownContext, MarkdownJsExtensionSettings, PlaywrightRenderer>
         {
             /// <summary>
-            /// Initializes a new instance of the <see cref="ConstructorMethod"/> class.
+            /// Initializes a new instance of the <see cref="CreateAsyncMethod"/> class.
             /// </summary>
             /// <param name="output">XUnit test output instance.</param>
-            public ConstructorMethod(ITestOutputHelper output)
+            public CreateAsyncMethod(ITestOutputHelper output)
                 : base(output)
             {
             }
 
-            /// <inheritdoc/>
+            /// <summary>
+            /// Test to ensure that the <see cref="HtmlMermaidJsRenderer"/> is created successfully.
+            /// </summary>
+            /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
             [Fact]
-            public void ReturnsInstance()
+            public async Task ReturnsInstance()
             {
                 var mermaidHttpServer = MermaidHttpServerFactory.GetTestServer(Log);
                 var logMessageActions = new PlaywrightRendererLogMessageActions();
@@ -52,7 +58,8 @@ namespace Dhgms.DocFx.MermaidJs.UnitTests.Plugin.Markdig
 
                 var settings = new MarkdownJsExtensionSettings(OutputMode.Png);
 
-                var instance = new HtmlMermaidJsRenderer(new MarkdownContext(), settings, playwrightRenderer);
+                var instance = await HtmlMermaidJsRenderer.CreateAsync(new MarkdownContext(), playwrightRenderer, settings);
+
                 Assert.NotNull(instance);
             }
 
@@ -61,13 +68,12 @@ namespace Dhgms.DocFx.MermaidJs.UnitTests.Plugin.Markdig
             [ClassData(typeof(ThrowsArgumentNullExceptionTestSource))]
             public void ThrowsArgumentNullException(MarkdownContext arg1, MarkdownJsExtensionSettings arg2, PlaywrightRenderer arg3, string expectedParameterNameForException)
             {
-                var exception = Assert.Throws<ArgumentNullException>(() => new HtmlMermaidJsRenderer(arg1, arg2, arg3));
-
+                var exception = await Assert.ThrowsAsync<ArgumentNullException>(() => HtmlMermaidJsRenderer.CreateAsync(arg1, arg2, arg3));
                 Assert.Equal(expectedParameterNameForException, exception.ParamName);
             }
 
             /// <summary>
-            /// Test source for <see cref="ThrowsArgumentNullException"/>.
+            /// Test source for <see cref="ThrowsArgumentNullExceptionAsync"/>.
             /// </summary>
             public sealed class ThrowsArgumentNullExceptionTestSource : TheoryData<MarkdownContext?, MarkdownJsExtensionSettings?, PlaywrightRenderer?, string>
             {

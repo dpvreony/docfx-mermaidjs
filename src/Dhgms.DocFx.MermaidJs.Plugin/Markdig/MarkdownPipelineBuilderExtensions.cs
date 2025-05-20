@@ -4,8 +4,8 @@
 
 using System;
 using Dhgms.DocFx.MermaidJs.Plugin.Settings;
+using Docfx.MarkdigEngine.Extensions;
 using Markdig;
-using Microsoft.DocAsCode.MarkdigEngine.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 
