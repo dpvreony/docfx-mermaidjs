@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for full license information.
 
 using System;
+using Dhgms.DocFx.MermaidJs.Plugin.Settings;
 using Docfx.MarkdigEngine.Extensions;
 using Markdig;
 using Markdig.Renderers;
@@ -21,18 +22,25 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Markdig
     {
         private readonly MarkdownContext _context;
         private readonly ILoggerFactory _loggerFactory;
+        private readonly MarkdownJsExtensionSettings _settings;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MermaidJsExtension"/> class.
         /// </summary>
         /// <param name="context">Markdig context instance.</param>
+        /// <param name="settings">Settings for the Markdown JS extension.</param>
         /// <param name="loggerFactory">NET core logging factory.</param>
-        public MermaidJsExtension(MarkdownContext context, ILoggerFactory loggerFactory)
+        public MermaidJsExtension(
+            MarkdownContext context,
+            MarkdownJsExtensionSettings settings,
+            ILoggerFactory loggerFactory)
         {
             ArgumentNullException.ThrowIfNull(context);
+            ArgumentNullException.ThrowIfNull(settings);
             ArgumentNullException.ThrowIfNull(loggerFactory);
 
             _context = context;
+            _settings = settings;
             _loggerFactory = loggerFactory;
         }
 
@@ -70,7 +78,9 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Markdig
 
                 var htmlMermaidJsRenderer = HtmlMermaidJsRenderer.CreateAsync(
                     _context,
-                    playwrightRenderer).WaitAndUnwrapException();
+                    playwrightRenderer,
+                    _settings).WaitAndUnwrapException();
+
                 htmlRenderer.ObjectRenderers.Insert(0, htmlMermaidJsRenderer);
             }
         }

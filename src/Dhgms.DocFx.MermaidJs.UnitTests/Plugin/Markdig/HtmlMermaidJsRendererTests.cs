@@ -6,6 +6,7 @@ using System;
 using System.Threading.Tasks;
 using Castle.Core.Logging;
 using Dhgms.DocFx.MermaidJs.Plugin.Markdig;
+using Dhgms.DocFx.MermaidJs.Plugin.Settings;
 using Docfx.MarkdigEngine.Extensions;
 using Markdig;
 using Microsoft.Extensions.Logging;
@@ -28,7 +29,7 @@ namespace Dhgms.DocFx.MermaidJs.UnitTests.Plugin.Markdig
         /// <summary>
         /// Unit tests for the <see cref="HtmlMermaidJsRenderer.CreateAsync"/> method.
         /// </summary>
-        public sealed class CreateAsyncMethod : Foundatio.Xunit.TestWithLoggingBase, ITestAsyncMethodWithNullableParameters<MarkdownContext, PlaywrightRenderer>
+        public sealed class CreateAsyncMethod : Foundatio.Xunit.TestWithLoggingBase, ITestAsyncMethodWithNullableParameters<MarkdownContext, PlaywrightRenderer, MarkdownJsExtensionSettings>
         {
             /// <summary>
             /// Initializes a new instance of the <see cref="CreateAsyncMethod"/> class.
@@ -54,26 +55,27 @@ namespace Dhgms.DocFx.MermaidJs.UnitTests.Plugin.Markdig
                 var playwrightRenderer = new PlaywrightRenderer(
                     mermaidHttpServer,
                     logMessageActionsWrapper);
-                var browserSession = playwrightRenderer.GetBrowserSessionAsync(PlaywrightBrowserTypeAndChannel.ChromiumDefault())
-                    .WaitAndUnwrapException();
-                var instance = await HtmlMermaidJsRenderer.CreateAsync(new MarkdownContext(), playwrightRenderer);
+
+                var settings = new MarkdownJsExtensionSettings(OutputMode.Png);
+
+                var instance = await HtmlMermaidJsRenderer.CreateAsync(new MarkdownContext(), playwrightRenderer, settings);
+
                 Assert.NotNull(instance);
             }
 
             /// <inheritdoc/>
             [Theory]
             [ClassData(typeof(ThrowsArgumentNullExceptionTestSource))]
-            public async Task ThrowsArgumentNullExceptionAsync(MarkdownContext arg1, PlaywrightRenderer arg2, string expectedParameterNameForException)
+            public async Task ThrowsArgumentNullExceptionAsync(MarkdownContext arg1, PlaywrightRenderer arg2, MarkdownJsExtensionSettings arg3, string expectedParameterNameForException)
             {
-                var exception = await Assert.ThrowsAsync<ArgumentNullException>(() => HtmlMermaidJsRenderer.CreateAsync(arg1, arg2));
-
+                var exception = await Assert.ThrowsAsync<ArgumentNullException>(() => HtmlMermaidJsRenderer.CreateAsync(arg1, arg2, arg3));
                 Assert.Equal(expectedParameterNameForException, exception.ParamName);
             }
 
             /// <summary>
             /// Test source for <see cref="ThrowsArgumentNullExceptionAsync"/>.
             /// </summary>
-            public sealed class ThrowsArgumentNullExceptionTestSource : TheoryData<MarkdownContext?, PlaywrightRenderer?, string>
+            public sealed class ThrowsArgumentNullExceptionTestSource : TheoryData<MarkdownContext?, PlaywrightRenderer?, MarkdownJsExtensionSettings?, string>
             {
                 /// <summary>
                 /// Initializes a new instance of the <see cref="ThrowsArgumentNullExceptionTestSource"/> class.
@@ -87,9 +89,10 @@ namespace Dhgms.DocFx.MermaidJs.UnitTests.Plugin.Markdig
                         logMessageActions,
                         new NullLogger<PlaywrightRenderer>());
 
-                    Add(null, new PlaywrightRenderer(mermaidHttpServer, logMessageActionsWrapper), "markdownContext");
+                    Add(null, new PlaywrightRenderer(mermaidHttpServer, logMessageActionsWrapper), new MarkdownJsExtensionSettings(OutputMode.Png), "markdownContext");
+                    Add(new MarkdownContext(), null, new MarkdownJsExtensionSettings(OutputMode.Png), "playwrightRenderer");
 #pragma warning restore CA2000 // Dispose objects before losing scope
-                    Add(new MarkdownContext(), null, "playwrightRenderer");
+                    Add(new MarkdownContext(), new PlaywrightRenderer(mermaidHttpServer, logMessageActionsWrapper), null, "settings");
                 }
             }
         }

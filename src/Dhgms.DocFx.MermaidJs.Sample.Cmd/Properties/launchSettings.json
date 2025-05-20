@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Dhgms.DocFx.MermaidJs.Sample.Cmd": {
+      "commandName": "Project",
+      "workingDirectory": ".\\"
+    }
+  }
+}
