@@ -75,7 +75,7 @@ namespace Dhgms.DocFx.MermaidJs.UnitTests.Plugin.Markdig
             /// <summary>
             /// Test source for <see cref="ThrowsArgumentNullExceptionAsync"/>.
             /// </summary>
-            public sealed class ThrowsArgumentNullExceptionTestSource : TheoryData<MarkdownContext?, MarkdownJsExtensionSettings?, PlaywrightRenderer?, string>
+            public sealed class ThrowsArgumentNullExceptionTestSource : TheoryData<MarkdownContext?, PlaywrightRenderer?, MarkdownJsExtensionSettings?, string>
             {
                 /// <summary>
                 /// Initializes a new instance of the <see cref="ThrowsArgumentNullExceptionTestSource"/> class.
@@ -89,10 +89,10 @@ namespace Dhgms.DocFx.MermaidJs.UnitTests.Plugin.Markdig
                         logMessageActions,
                         new NullLogger<PlaywrightRenderer>());
 
-                    Add(null, new MarkdownJsExtensionSettings(OutputMode.Png), new PlaywrightRenderer(mermaidHttpServer, logMessageActionsWrapper), "markdownContext");
-                    Add(null, null, new PlaywrightRenderer(mermaidHttpServer, logMessageActionsWrapper), "markdownContext");
+                    Add(null, new PlaywrightRenderer(mermaidHttpServer, logMessageActionsWrapper), new MarkdownJsExtensionSettings(OutputMode.Png), "markdownContext");
+                    Add(new MarkdownContext(), null, new MarkdownJsExtensionSettings(OutputMode.Png), "playwrightRenderer");
 #pragma warning restore CA2000 // Dispose objects before losing scope
-                    Add(new MarkdownContext(), new MarkdownJsExtensionSettings(OutputMode.Png), null, "playwrightRenderer");
+                    Add(new MarkdownContext(), new PlaywrightRenderer(mermaidHttpServer, logMessageActionsWrapper), null, "settings");
                 }
             }
         }
