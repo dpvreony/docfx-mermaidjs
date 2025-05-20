@@ -46,18 +46,18 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Markdig
         /// <summary>
         /// Creates a new instance of the <see cref="HtmlMermaidJsRenderer"/> class.
         /// </summary>
-        /// <param name="context">Markdown DocFx Context.</param>
+        /// <param name="markdownContext">Markdown DocFx Context.</param>
         /// <param name="playwrightRenderer">Playwright MermaidJS Renderer.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public static async Task<HtmlMermaidJsRenderer> CreateAsync(
-            MarkdownContext context,
+            MarkdownContext markdownContext,
             PlaywrightRenderer playwrightRenderer)
         {
-            ArgumentNullException.ThrowIfNull(context);
+            ArgumentNullException.ThrowIfNull(markdownContext);
             ArgumentNullException.ThrowIfNull(playwrightRenderer);
 
             return new HtmlMermaidJsRenderer(
-                context,
+                markdownContext,
                 playwrightRenderer,
                 await playwrightRenderer.GetBrowserSessionAsync(PlaywrightBrowserTypeAndChannel.ChromiumDefault()));
         }
