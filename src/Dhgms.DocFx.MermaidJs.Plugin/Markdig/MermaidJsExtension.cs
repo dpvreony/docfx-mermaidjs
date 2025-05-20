@@ -3,12 +3,14 @@
 // See the LICENSE file in the project root for full license information.
 
 using System;
+using Docfx.MarkdigEngine.Extensions;
 using Markdig;
 using Markdig.Renderers;
-using Microsoft.DocAsCode.MarkdigEngine.Extensions;
 using Microsoft.Extensions.Logging;
+using Nito.AsyncEx.Synchronous;
 using Whipstaff.Mermaid.HttpServer;
 using Whipstaff.Mermaid.Playwright;
+using Whipstaff.Playwright;
 
 namespace Dhgms.DocFx.MermaidJs.Plugin.Markdig
 {
@@ -66,9 +68,9 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Markdig
                     mermaidHttpServer,
                     logMessageActionsWrapper);
 
-                var htmlMermaidJsRenderer = new HtmlMermaidJsRenderer(
+                var htmlMermaidJsRenderer = HtmlMermaidJsRenderer.CreateAsync(
                     _context,
-                    playwrightRenderer);
+                    playwrightRenderer).WaitAndUnwrapException();
                 htmlRenderer.ObjectRenderers.Insert(0, htmlMermaidJsRenderer);
             }
         }
