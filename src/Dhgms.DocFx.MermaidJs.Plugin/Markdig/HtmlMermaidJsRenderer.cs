@@ -43,6 +43,25 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Markdig
             _browserSession = browserSession;
         }
 
+        /// <summary>
+        /// Creates a new instance of the <see cref="HtmlMermaidJsRenderer"/> class.
+        /// </summary>
+        /// <param name="context">Markdown DocFx Context.</param>
+        /// <param name="playwrightRenderer">Playwright MermaidJS Renderer.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public static async Task<HtmlMermaidJsRenderer> CreateAsync(
+            MarkdownContext context,
+            PlaywrightRenderer playwrightRenderer)
+        {
+            ArgumentNullException.ThrowIfNull(context);
+            ArgumentNullException.ThrowIfNull(playwrightRenderer);
+
+            return new HtmlMermaidJsRenderer(
+                context,
+                playwrightRenderer,
+                await playwrightRenderer.GetBrowserSessionAsync(PlaywrightBrowserTypeAndChannel.ChromiumDefault()));
+        }
+
         /// <inheritdoc/>
         protected override void Write(HtmlRenderer renderer, MermaidCodeBlock obj)
         {
@@ -86,22 +105,6 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Markdig
 
             _ = renderer.EnsureLine();
             return;
-        }
-
-        /// <summary>
-        /// Creates a new instance of the <see cref="HtmlMermaidJsRenderer"/> class.
-        /// </summary>
-        /// <param name="context">Markdown DocFx Context</param>
-        /// <param name="playwrightRenderer">Playwright MermaidJS Renderer.</param>
-        /// <returns></returns>
-        public static async Task<HtmlMermaidJsRenderer> CreateAsync(
-            MarkdownContext context,
-            PlaywrightRenderer playwrightRenderer)
-        {
-            return new HtmlMermaidJsRenderer(
-                context,
-                playwrightRenderer,
-                await playwrightRenderer.GetBrowserSessionAsync(PlaywrightBrowserTypeAndChannel.ChromiumDefault()));
         }
     }
 }
