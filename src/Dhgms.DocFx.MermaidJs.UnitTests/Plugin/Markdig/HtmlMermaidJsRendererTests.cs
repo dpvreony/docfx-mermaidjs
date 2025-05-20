@@ -3,15 +3,18 @@
 // See the LICENSE file in the project root for full license information.
 
 using System;
+using System.Threading.Tasks;
 using Castle.Core.Logging;
 using Dhgms.DocFx.MermaidJs.Plugin.Markdig;
+using Docfx.MarkdigEngine.Extensions;
 using Markdig;
-using Microsoft.DocAsCode.MarkdigEngine.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using NetTestRegimentation;
+using Nito.AsyncEx.Synchronous;
 using Whipstaff.Mermaid.HttpServer;
 using Whipstaff.Mermaid.Playwright;
+using Whipstaff.Playwright;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -23,22 +26,25 @@ namespace Dhgms.DocFx.MermaidJs.UnitTests.Plugin.Markdig
     public static class HtmlMermaidJsRendererTests
     {
         /// <summary>
-        /// Unit tests for the constructor.
+        /// Unit tests for the <see cref="HtmlMermaidJsRenderer.CreateAsync"/> method.
         /// </summary>
-        public sealed class ConstructorMethod : Foundatio.Xunit.TestWithLoggingBase, ITestConstructorMethodWithNullableParameters<MarkdownContext, PlaywrightRenderer>
+        public sealed class CreateAsyncMethod : Foundatio.Xunit.TestWithLoggingBase, ITestAsyncMethodWithNullableParameters<MarkdownContext, PlaywrightRenderer>
         {
             /// <summary>
-            /// Initializes a new instance of the <see cref="ConstructorMethod"/> class.
+            /// Initializes a new instance of the <see cref="CreateAsyncMethod"/> class.
             /// </summary>
             /// <param name="output">XUnit test output instance.</param>
-            public ConstructorMethod(ITestOutputHelper output)
+            public CreateAsyncMethod(ITestOutputHelper output)
                 : base(output)
             {
             }
 
-            /// <inheritdoc/>
+            /// <summary>
+            /// Test to ensure that the <see cref="HtmlMermaidJsRenderer"/> is created successfully.
+            /// </summary>
+            /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
             [Fact]
-            public void ReturnsInstance()
+            public async Task ReturnsInstance()
             {
                 var mermaidHttpServer = MermaidHttpServerFactory.GetTestServer(Log);
                 var logMessageActions = new PlaywrightRendererLogMessageActions();
@@ -48,22 +54,24 @@ namespace Dhgms.DocFx.MermaidJs.UnitTests.Plugin.Markdig
                 var playwrightRenderer = new PlaywrightRenderer(
                     mermaidHttpServer,
                     logMessageActionsWrapper);
-                var instance = new HtmlMermaidJsRenderer(new MarkdownContext(), playwrightRenderer);
+                var browserSession = playwrightRenderer.GetBrowserSessionAsync(PlaywrightBrowserTypeAndChannel.ChromiumDefault())
+                    .WaitAndUnwrapException();
+                var instance = await HtmlMermaidJsRenderer.CreateAsync(new MarkdownContext(), playwrightRenderer);
                 Assert.NotNull(instance);
             }
 
             /// <inheritdoc/>
             [Theory]
             [ClassData(typeof(ThrowsArgumentNullExceptionTestSource))]
-            public void ThrowsArgumentNullException(MarkdownContext arg1, PlaywrightRenderer arg2, string expectedParameterNameForException)
+            public async Task ThrowsArgumentNullExceptionAsync(MarkdownContext arg1, PlaywrightRenderer arg2, string expectedParameterNameForException)
             {
-                var exception = Assert.Throws<ArgumentNullException>(() => new HtmlMermaidJsRenderer(arg1, arg2));
+                var exception = await Assert.ThrowsAsync<ArgumentNullException>(() => HtmlMermaidJsRenderer.CreateAsync(arg1, arg2));
 
                 Assert.Equal(expectedParameterNameForException, exception.ParamName);
             }
 
             /// <summary>
-            /// Test source for <see cref="ThrowsArgumentNullException"/>.
+            /// Test source for <see cref="ThrowsArgumentNullExceptionAsync"/>.
             /// </summary>
             public sealed class ThrowsArgumentNullExceptionTestSource : TheoryData<MarkdownContext?, PlaywrightRenderer?, string>
             {

@@ -3,8 +3,8 @@
 // See the LICENSE file in the project root for full license information.
 
 using System;
+using Docfx.MarkdigEngine.Extensions;
 using Markdig;
-using Microsoft.DocAsCode.MarkdigEngine.Extensions;
 using Microsoft.Extensions.Logging.Abstractions;
 
 namespace Dhgms.DocFx.MermaidJs.Plugin.Markdig

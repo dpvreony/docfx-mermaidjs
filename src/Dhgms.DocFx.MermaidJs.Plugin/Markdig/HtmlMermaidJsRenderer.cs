@@ -4,9 +4,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using Docfx.MarkdigEngine.Extensions;
 using Markdig.Renderers;
 using Markdig.Renderers.Html;
-using Microsoft.DocAsCode.MarkdigEngine.Extensions;
 using Nito.AsyncEx.Synchronous;
 using Whipstaff.Mermaid.Playwright;
 using Whipstaff.Playwright;
@@ -20,19 +21,45 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Markdig
     {
         private readonly MarkdownContext _markdownContext;
         private readonly PlaywrightRenderer _playwrightRenderer;
+        private readonly PlaywrightRendererBrowserInstance _browserSession;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HtmlMermaidJsRenderer"/> class.
         /// </summary>
         /// <param name="markdownContext">DocFX Markdown context.</param>
         /// <param name="playwrightRenderer">Playwright Renderer used to generate mermaid.</param>
-        public HtmlMermaidJsRenderer(MarkdownContext markdownContext, PlaywrightRenderer playwrightRenderer)
+        /// <param name="browserSession">Browser session to render diagrams. Passed in as a cached object to reduce time on rendering multiple diagrams.</param>
+        private HtmlMermaidJsRenderer(
+            MarkdownContext markdownContext,
+            PlaywrightRenderer playwrightRenderer,
+            PlaywrightRendererBrowserInstance browserSession)
+        {
+            ArgumentNullException.ThrowIfNull(markdownContext);
+            ArgumentNullException.ThrowIfNull(playwrightRenderer);
+            ArgumentNullException.ThrowIfNull(browserSession);
+
+            _markdownContext = markdownContext;
+            _playwrightRenderer = playwrightRenderer;
+            _browserSession = browserSession;
+        }
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="HtmlMermaidJsRenderer"/> class.
+        /// </summary>
+        /// <param name="markdownContext">Markdown DocFx Context.</param>
+        /// <param name="playwrightRenderer">Playwright MermaidJS Renderer.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public static async Task<HtmlMermaidJsRenderer> CreateAsync(
+            MarkdownContext markdownContext,
+            PlaywrightRenderer playwrightRenderer)
         {
             ArgumentNullException.ThrowIfNull(markdownContext);
             ArgumentNullException.ThrowIfNull(playwrightRenderer);
 
-            _markdownContext = markdownContext;
-            _playwrightRenderer = playwrightRenderer;
+            return new HtmlMermaidJsRenderer(
+                markdownContext,
+                playwrightRenderer,
+                await playwrightRenderer.GetBrowserSessionAsync(PlaywrightBrowserTypeAndChannel.ChromiumDefault()));
         }
 
         /// <inheritdoc/>
@@ -51,9 +78,8 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Markdig
             */
 
             var mermaidMarkup = obj.Lines.ToSlice().Text;
-            var responseModel = _playwrightRenderer.GetDiagram(
-                mermaidMarkup,
-                PlaywrightBrowserTypeAndChannel.ChromiumDefault()).WaitAndUnwrapException();
+            var responseModel = _browserSession.GetDiagram(mermaidMarkup)
+                .WaitAndUnwrapException();
 
             if (responseModel == null)
             {
