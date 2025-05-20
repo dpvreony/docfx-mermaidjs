@@ -78,8 +78,8 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Markdig
 
                 var htmlMermaidJsRenderer = HtmlMermaidJsRenderer.CreateAsync(
                     _context,
-                    _settings,
-                    playwrightRenderer).WaitAndUnwrapException();
+                    playwrightRenderer,
+                    _settings).WaitAndUnwrapException();
 
                 htmlRenderer.ObjectRenderers.Insert(0, htmlMermaidJsRenderer);
             }

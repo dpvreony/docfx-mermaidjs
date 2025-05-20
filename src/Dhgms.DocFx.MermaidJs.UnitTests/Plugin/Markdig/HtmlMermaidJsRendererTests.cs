@@ -29,7 +29,7 @@ namespace Dhgms.DocFx.MermaidJs.UnitTests.Plugin.Markdig
         /// <summary>
         /// Unit tests for the <see cref="HtmlMermaidJsRenderer.CreateAsync"/> method.
         /// </summary>
-        public sealed class ConstructorMethod : Foundatio.Xunit.TestWithLoggingBase, ITestConstructorMethodWithNullableParameters<MarkdownContext, MarkdownJsExtensionSettings, PlaywrightRenderer>
+        public sealed class CreateAsyncMethod : Foundatio.Xunit.TestWithLoggingBase, ITestAsyncMethodWithNullableParameters<MarkdownContext, PlaywrightRenderer, MarkdownJsExtensionSettings>
         {
             /// <summary>
             /// Initializes a new instance of the <see cref="CreateAsyncMethod"/> class.
@@ -66,7 +66,7 @@ namespace Dhgms.DocFx.MermaidJs.UnitTests.Plugin.Markdig
             /// <inheritdoc/>
             [Theory]
             [ClassData(typeof(ThrowsArgumentNullExceptionTestSource))]
-            public void ThrowsArgumentNullException(MarkdownContext arg1, MarkdownJsExtensionSettings arg2, PlaywrightRenderer arg3, string expectedParameterNameForException)
+            public async Task ThrowsArgumentNullExceptionAsync(MarkdownContext arg1, PlaywrightRenderer arg2, MarkdownJsExtensionSettings arg3, string expectedParameterNameForException)
             {
                 var exception = await Assert.ThrowsAsync<ArgumentNullException>(() => HtmlMermaidJsRenderer.CreateAsync(arg1, arg2, arg3));
                 Assert.Equal(expectedParameterNameForException, exception.ParamName);
