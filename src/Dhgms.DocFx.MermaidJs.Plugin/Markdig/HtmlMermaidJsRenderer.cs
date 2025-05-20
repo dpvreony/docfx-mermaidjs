@@ -92,8 +92,6 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Markdig
             {
                 var imageBase64 = Convert.ToBase64String(responseModel.Png);
 
-
-
                 var properties = new List<KeyValuePair<string, string?>>
                 {
                     new("alt", "Mermaid Diagram"),
