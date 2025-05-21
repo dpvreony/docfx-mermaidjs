@@ -21,4 +21,6 @@ jobs:
     uses: dpvreony/.github/.github/workflows/dotnet-ci.yml@7c8d3bfbc1fbc2470c511b607d15356427f1e858
     with:
       solutionName: "Dhgms.DocFx.MermaidJs"
+    secrets:
+      NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
 
