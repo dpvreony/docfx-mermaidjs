@@ -2,58 +2,47 @@
 // This file is licensed to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
-using System;
-using Dhgms.DocFx.MermaidJs.Plugin.Settings;
-using Docfx.MarkdigEngine.Extensions;
 using Markdig;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
+using Whipstaff.Markdig.Settings;
+using Whipstaff.Playwright;
 
 namespace Dhgms.DocFx.MermaidJs.Plugin.Markdig
 {
     /// <summary>
     /// Extension methods for <see cref="MarkdownPipelineBuilder"/>.
     /// </summary>
+    /// <remarks>
+    /// These now redirect to <see cref="Whipstaff.Markdig.Mermaid.MarkdownPipelineBuilderExtensions"/>, this library has been stripped back due to using the MarkDig Mermaid logic elsewhere, and with DocFX plugs taking on extra packages such as PlantUML, and not offering a core plug in package.</remarks>
     public static class MarkdownPipelineBuilderExtensions
     {
         /// <summary>
         /// Adds the MermaidJs plugin to the pipeline.
         /// </summary>
         /// <param name="pipeline">Markdown Pipeline Builder to modify.</param>
-        /// <param name="context">DocFX Markdown Context.</param>
+        /// <param name="playwrightBrowserTypeAndChannel">Browser and channel type to use.</param>
         /// <returns>Modified Pipeline Builder.</returns>
         public static MarkdownPipelineBuilder UseMermaidJsExtension(
             this MarkdownPipelineBuilder pipeline,
-            MarkdownContext context)
-        {
-            var defaultSettings = new MarkdownJsExtensionSettings(OutputMode.Png);
-            return UseMermaidJsExtension(
+            PlaywrightBrowserTypeAndChannel playwrightBrowserTypeAndChannel) =>
+            Whipstaff.Markdig.Mermaid.MarkdownPipelineBuilderExtensions.UseMermaidJsExtension(
                 pipeline,
-                context,
-                defaultSettings,
-                new NullLoggerFactory());
-        }
+                playwrightBrowserTypeAndChannel);
 
         /// <summary>
         /// Adds the MermaidJs plugin to the pipeline.
         /// </summary>
         /// <param name="pipeline">Markdown Pipeline Builder to modify.</param>
-        /// <param name="context">DocFX Markdown Context.</param>
         /// <param name="settings">Settings to use for the extension.</param>
         /// <param name="loggerFactory">Logger Factory instance to use.</param>
         /// <returns>Modified Pipeline Builder.</returns>
         public static MarkdownPipelineBuilder UseMermaidJsExtension(
             this MarkdownPipelineBuilder pipeline,
-            MarkdownContext context,
             MarkdownJsExtensionSettings settings,
-            ILoggerFactory loggerFactory)
-        {
-            ArgumentNullException.ThrowIfNull(pipeline);
-            pipeline.Extensions.AddIfNotAlready(new MermaidJsExtension(
-                context,
+            ILoggerFactory loggerFactory) =>
+            Whipstaff.Markdig.Mermaid.MarkdownPipelineBuilderExtensions.UseMermaidJsExtension(
+                pipeline,
                 settings,
-                loggerFactory));
-            return pipeline;
-        }
+                loggerFactory);
     }
 }
