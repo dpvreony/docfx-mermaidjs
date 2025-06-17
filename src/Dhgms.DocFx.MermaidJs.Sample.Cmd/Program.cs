@@ -4,10 +4,11 @@
 
 using System.Threading.Tasks;
 using Dhgms.DocFx.MermaidJs.Plugin.Markdig;
-using Dhgms.DocFx.MermaidJs.Plugin.Settings;
 using Docfx.MarkdigEngine.Extensions;
 using Microsoft.DocAsCode;
 using Microsoft.Extensions.Logging.Abstractions;
+using Whipstaff.Markdig.Settings;
+using Whipstaff.Playwright;
 
 namespace Dhgms.DocFx.MermaidJs.Sample.Cmd
 {
@@ -27,7 +28,11 @@ namespace Dhgms.DocFx.MermaidJs.Sample.Cmd
                 var options = new BuildOptions
                 {
                     // Enable MermaidJS markdown extension
-                    ConfigureMarkdig = pipeline => pipeline.UseMermaidJsExtension(new MarkdownContext(), new MarkdownJsExtensionSettings(OutputMode.Svg), new NullLoggerFactory())
+                    ConfigureMarkdig = pipeline => pipeline.UseMermaidJsExtension(
+                        new MarkdownJsExtensionSettings(
+                            PlaywrightBrowserTypeAndChannel.Chrome(),
+                            OutputMode.Svg),
+                        new NullLoggerFactory())
                 };
                 await Docset.Build("docfx.json", options);
             }
