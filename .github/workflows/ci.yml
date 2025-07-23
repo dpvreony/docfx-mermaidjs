@@ -18,7 +18,7 @@ jobs:
       deployments: read
       pages: write
       id-token: write
-    uses: dpvreony/.github/.github/workflows/dotnet-ci.yml@62ebfb204cbbbf933bdc1bd4c313acd0b7040f3f
+    uses: dpvreony/github-action-workflows/.github/workflows/dotnet-ci.yml@abe9651210727e861f97303c30a8bacf05c78195
     with:
       solutionName: "Dhgms.DocFx.MermaidJs"
     secrets:
