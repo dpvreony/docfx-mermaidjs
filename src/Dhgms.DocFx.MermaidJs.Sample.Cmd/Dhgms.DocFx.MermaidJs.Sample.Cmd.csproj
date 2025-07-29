@@ -24,9 +24,4 @@
   <ItemGroup>
     <ProjectReference Include="..\Dhgms.DocFx.MermaidJs.Plugin\Dhgms.DocFx.MermaidJs.Plugin.csproj" />
   </ItemGroup>
-
-  <Target Name="RunDocFxGeneration" AfterTargets="Build">
-    <Exec Command="pwsh $(OutDir)playwright.ps1 install" ConsoleToMSBuild="true" LogStandardErrorAsError="true" />
-    <Exec Command="$(OutDir)$(AssemblyName)" ConsoleToMSBuild="true" LogStandardErrorAsError="true" />
-  </Target>
 </Project>
