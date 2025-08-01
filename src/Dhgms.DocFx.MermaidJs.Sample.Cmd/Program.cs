@@ -4,7 +4,6 @@
 
 using System.Threading.Tasks;
 using Dhgms.DocFx.MermaidJs.Plugin.Markdig;
-using Docfx.MarkdigEngine.Extensions;
 using Microsoft.DocAsCode;
 using Microsoft.Extensions.Logging.Abstractions;
 using Whipstaff.Markdig.Settings;

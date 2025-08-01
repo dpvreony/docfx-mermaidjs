@@ -16,7 +16,7 @@ namespace Dhgms.DocFx.MermaidJs.UnitTests.Plugin.Markdig
         /// <summary>
         /// Unit Test for <see cref="MarkdownPipelineBuilderExtensions.UseMermaidJsExtension(global::Markdig.MarkdownPipelineBuilder, Whipstaff.Playwright.PlaywrightBrowserTypeAndChannel)"/>.
         /// </summary>
-        public sealed class UseMermaidJsExtensionMerhod
+        public sealed class UseMermaidJsExtensionMethod
         {
             /// <summary>
             /// Tests that the method returns an instance of <see cref="global::Markdig.MarkdownPipelineBuilder"/>.
