@@ -43,6 +43,12 @@
       "commands": [
         "docfx"
       ]
+    },
+    "microsoft.sbom.dotnettool": {
+      "version": "4.1.0",
+      "commands": [
+        "sbom-tool"
+      ]
     }
   }
 }
