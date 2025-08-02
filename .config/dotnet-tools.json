@@ -14,12 +14,6 @@
         "config-validate"
       ]
     },
-    "dotnet-sonarscanner": {
-      "version": "10.2.0",
-      "commands": [
-        "dotnet-sonarscanner"
-      ]
-    },
     "jetbrains.resharper.globaltools": {
       "version": "2025.1.4",
       "commands": [
