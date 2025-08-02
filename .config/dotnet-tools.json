@@ -8,12 +8,6 @@
         "snitch"
       ]
     },
-    "dotmorten.omdgenerator": {
-      "version": "1.4.0",
-      "commands": [
-        "generateomd"
-      ]
-    },
     "configvalidate": {
       "version": "1.0.0",
       "commands": [
