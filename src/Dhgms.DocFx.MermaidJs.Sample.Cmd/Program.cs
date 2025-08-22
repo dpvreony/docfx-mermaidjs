@@ -5,8 +5,10 @@
 using System.Threading.Tasks;
 using Dhgms.DocFx.MermaidJs.Plugin.Markdig;
 using Microsoft.DocAsCode;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Whipstaff.Markdig.Settings;
+using Whipstaff.Mermaid.Playwright;
 using Whipstaff.Playwright;
 
 namespace Dhgms.DocFx.MermaidJs.Sample.Cmd
@@ -24,16 +26,25 @@ namespace Dhgms.DocFx.MermaidJs.Sample.Cmd
         {
             try
             {
-                var options = new BuildOptions
+                using (var loggerFactory = new Microsoft.Extensions.Logging.Abstractions.NullLoggerFactory())
                 {
-                    // Enable MermaidJS markdown extension
-                    ConfigureMarkdig = pipeline => pipeline.UseMermaidJsExtension(
-                        new MarkdownJsExtensionSettings(
-                            PlaywrightBrowserTypeAndChannel.Chrome(),
-                            OutputMode.Svg),
-                        new NullLoggerFactory())
-                };
-                await Docset.Build("docfx.json", options);
+                    var playwrightRenderer = PlaywrightRenderer.Default(loggerFactory);
+                    var browserSession = await playwrightRenderer.GetBrowserSessionAsync(PlaywrightBrowserTypeAndChannel.Chrome())
+                        .ConfigureAwait(false);
+
+                    var markdownJsExtensionSettings = new MarkdownJsExtensionSettings(
+                        browserSession,
+                        OutputMode.Svg);
+
+                    var options = new BuildOptions
+                    {
+                        // Enable MermaidJS markdown extension
+                        ConfigureMarkdig = pipeline => pipeline.UseMermaidJsExtension(
+                                markdownJsExtensionSettings,
+                                loggerFactory)
+                    };
+                    await Docset.Build("docfx.json", options);
+                }
             }
 #pragma warning disable CA1031
             catch (System.Exception ex)
