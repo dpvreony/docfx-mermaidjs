@@ -2,8 +2,11 @@
 // This file is licensed to you under the MIT license.
 // See the LICENSE file in the project root for full license information.
 
-using System;
+using System.Threading.Tasks;
 using Dhgms.DocFx.MermaidJs.Plugin.Markdig;
+using Microsoft.Extensions.Logging;
+using Whipstaff.Mermaid.Playwright;
+using Whipstaff.Playwright;
 using Xunit;
 
 namespace Dhgms.DocFx.MermaidJs.UnitTests.Plugin.Markdig
@@ -14,21 +17,28 @@ namespace Dhgms.DocFx.MermaidJs.UnitTests.Plugin.Markdig
     public static class MarkdownPipelineBuilderExtensionsTests
     {
         /// <summary>
-        /// Unit Test for <see cref="MarkdownPipelineBuilderExtensions.UseMermaidJsExtension(global::Markdig.MarkdownPipelineBuilder, Whipstaff.Playwright.PlaywrightBrowserTypeAndChannel)"/>.
+        /// Unit Test for <see cref="MarkdownPipelineBuilderExtensions.UseMermaidJsExtension(global::Markdig.MarkdownPipelineBuilder, Whipstaff.Mermaid.Playwright.PlaywrightRendererBrowserInstance, ILoggerFactory)"/>.
         /// </summary>
         public sealed class UseMermaidJsExtensionMethod
         {
             /// <summary>
             /// Tests that the method returns an instance of <see cref="global::Markdig.MarkdownPipelineBuilder"/>.
             /// </summary>
+            /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
             [Fact]
-            public void ReturnsInstance()
+            public async Task ReturnsInstanceAsync()
             {
-                var markdownPipelineBuilder = new global::Markdig.MarkdownPipelineBuilder();
-                var instance = markdownPipelineBuilder.UseMermaidJsExtension(Whipstaff.Playwright.PlaywrightBrowserTypeAndChannel.Chrome());
+                using (var loggerFactory = new Microsoft.Extensions.Logging.Abstractions.NullLoggerFactory())
+                {
+                    var markdownPipelineBuilder = new global::Markdig.MarkdownPipelineBuilder();
+                    var playwrightRenderer = PlaywrightRenderer.Default(loggerFactory);
+                    var instance = markdownPipelineBuilder.UseMermaidJsExtension(
+                        await playwrightRenderer.GetBrowserSessionAsync(PlaywrightBrowserTypeAndChannel.Chrome()),
+                        loggerFactory);
 
-                Assert.NotNull(instance);
-                Assert.Same(markdownPipelineBuilder, instance);
+                    Assert.NotNull(instance);
+                    Assert.Same(markdownPipelineBuilder, instance);
+                }
             }
         }
     }

@@ -5,6 +5,7 @@
 using Markdig;
 using Microsoft.Extensions.Logging;
 using Whipstaff.Markdig.Settings;
+using Whipstaff.Mermaid.Playwright;
 using Whipstaff.Playwright;
 
 namespace Dhgms.DocFx.MermaidJs.Plugin.Markdig
@@ -20,14 +21,17 @@ namespace Dhgms.DocFx.MermaidJs.Plugin.Markdig
         /// Adds the MermaidJs plugin to the pipeline.
         /// </summary>
         /// <param name="pipeline">Markdown Pipeline Builder to modify.</param>
-        /// <param name="playwrightBrowserTypeAndChannel">Browser and channel type to use.</param>
+        /// <param name="browserSession">Browser session to render diagrams. Passed in as a cached object to reduce time on rendering multiple diagrams.</param>
+        /// <param name="loggerFactory">Logger Factory instance to use.</param>
         /// <returns>Modified Pipeline Builder.</returns>
         public static MarkdownPipelineBuilder UseMermaidJsExtension(
             this MarkdownPipelineBuilder pipeline,
-            PlaywrightBrowserTypeAndChannel playwrightBrowserTypeAndChannel) =>
+            PlaywrightRendererBrowserInstance browserSession,
+            ILoggerFactory loggerFactory) =>
             Whipstaff.Markdig.Mermaid.MarkdownPipelineBuilderExtensions.UseMermaidJsExtension(
                 pipeline,
-                playwrightBrowserTypeAndChannel);
+                browserSession,
+                loggerFactory);
 
         /// <summary>
         /// Adds the MermaidJs plugin to the pipeline.
