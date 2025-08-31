@@ -13,7 +13,7 @@
     <PackageReference Include="Nito.AsyncEx" Version="5.1.2" />
     <PackageReference Include="ReactiveMarbles.ObservableEvents.SourceGenerator" Version="1.3.1" PrivateAssets="all" />
     <PackageReference Include="System.Composition" Version="8.0.0" PrivateAssets="all" />
-    <PackageReference Include="System.Reactive" Version="6.0.1" />
+    <PackageReference Include="System.Reactive" Version="6.0.2" />
     <PackageReference Include="Whipstaff.Markdig" Version="8.2.210" />
   </ItemGroup>
 </Project>
