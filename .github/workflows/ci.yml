@@ -4,7 +4,7 @@ on:
   push:
     branches: [ main ]
   pull_request:
-    types: [opened, synchronize, reopened, closed]
+    types: [opened, synchronize, reopened]
     branches: [ main ]
 
 permissions:
@@ -13,12 +13,14 @@ permissions:
 jobs:
   build:
     permissions:
-      actions: read
+      actions: write
       contents: write
       deployments: read
       pages: write
       id-token: write
       pull-requests: write
+      packages: read
+      security-events: write
     uses: dpvreony/github-action-workflows/.github/workflows/dotnet-ci.yml@1.4.15
     with:
       solutionName: "Dhgms.DocFx.MermaidJs"
