@@ -45,13 +45,13 @@
   <ItemGroup Condition="$(IsTestProject)">
     <PackageReference Include="GitHubActionsTestLogger" Version="3.0.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
-    <PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" Version="18.0.4" />
+    <PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" Version="18.3.2" />
     <PackageReference Include="NetTestRegimentation" Version="2.0.8" />
     <PackageReference Include="NetTestRegimentation.Xunit" Version="2.0.8" />
-    <PackageReference Include="Rocks" Version="9.3.0" PrivateAssets="all" />
+    <PackageReference Include="Rocks" Version="10.0.0" PrivateAssets="all" />
     <PackageReference Include="TestableIO.System.IO.Abstractions.TestingHelpers" Version="22.1.0" />
-    <PackageReference Include="xunit.v3" Version="3.2.1" />
-    <PackageReference Include="xunit.analyzers" Version="1.26.0" />
+    <PackageReference Include="xunit.v3" Version="3.2.2" />
+    <PackageReference Include="xunit.analyzers" Version="1.27.0" />
     <PackageReference Include="xunit.runner.visualstudio" Version="3.1.5" />
     <PackageReference Include="Xunit.StaFact" Version="3.0.13" />
     <!--<PackageReference Include="PublicApiGenerator" Version="8.1.0" />-->
@@ -67,7 +67,7 @@
   </ItemGroup>
 
   <ItemGroup Condition="$(IsWasmProject) == ''">
-    <PackageReference Include="Dhgms.QualityAssurancePack" Version="2.4.84" PrivateAssets="All" />
+    <PackageReference Include="Dhgms.QualityAssurancePack" Version="2.4.93" PrivateAssets="All" />
   </ItemGroup>
   <ItemGroup>
     <AdditionalFiles Include="$(MSBuildThisFileDirectory)stylecop.json" Link="stylecop.json" />
