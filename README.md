@@ -11,6 +11,11 @@ This DocFX MermaidJS plugin is a wrapper around the mermaid NPM package. It is a
 * The syntax can be validated at build time.
 * The image is only built once.
 * The image can be embedded in a pdf.
+* You can work on custom docfx templates that minimise javascript and\ or packages.
+
+NOTES:
+* Only inline PNG is supported, this is due to a limitation in the plug in model and adding new files to the file cache on the fly. I may revisit this in future. The plug in itself exposes SVG data if you want to play with it.
+* This package was originally written around the DFM flavor of Markdown in DocFX. With that now unsupported in DocFX you can in theory just use `Whipstaff.Mermaid` which this package now effectively acts as a wrapper to.
 
 ## Credits
 
@@ -28,12 +33,25 @@ This DocFX MermaidJS plugin is a wrapper around the mermaid NPM package. It is a
 ### 3. Add the following initialisation
 
 ```cs
-                var options = new BuildOptions
+                using (var loggerFactory = new Microsoft.Extensions.Logging.Abstractions.NullLoggerFactory())
                 {
-                    // Enable MermaidJS markdown extension
-                    ConfigureMarkdig = pipeline => pipeline.UseMermaidJsExtension(new MarkdownContext())
-                };
-                await Docset.Build("docfx.json", options);
+                    var playwrightRenderer = PlaywrightRenderer.Default(loggerFactory);
+                    var browserSession = await playwrightRenderer.GetBrowserSessionAsync(PlaywrightBrowserTypeAndChannel.Chrome())
+                        .ConfigureAwait(false);
+
+                    var markdownJsExtensionSettings = new MarkdownJsExtensionSettings(
+                        browserSession,
+                        OutputMode.Svg);
+
+                    var options = new BuildOptions
+                    {
+                        // Enable MermaidJS markdown extension
+                        ConfigureMarkdig = pipeline => pipeline.UseMermaidJsExtension(
+                                markdownJsExtensionSettings,
+                                loggerFactory)
+                    };
+                    await Docset.Build("docfx.json", options);
+                }
 ```
 
 You can see an example of this in
@@ -41,8 +59,6 @@ You can see an example of this in
 1. [The sample console application in this repository (github.com/dpvreony/docfx-mermaidjs/tree/main/src/Dhgms.DocFx.MermaidJs.Sample.Cmd)](https://github.com/dpvreony/docfx-mermaidjs/tree/main/src/Dhgms.DocFx.MermaidJs.Sample.Cmd)
 2. [The console application in my main documentation repository (github.com/dpvreony/documentation/tree/main/src/docfx_project)](https://github.com/dpvreony/documentation/tree/main/src/docfx_project)
 
-NOTES:
-* Only inline PNG is supported, this is due to a limitation in the plug in model and adding new files to the file cache on the fly. I may revisit this in future. The plug in itself exposes SVG data if you want to play with it.
 
 You can adjust the settings by viewing the detailed documentation.
 
