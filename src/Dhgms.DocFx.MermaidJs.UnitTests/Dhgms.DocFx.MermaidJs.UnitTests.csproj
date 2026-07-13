@@ -4,6 +4,7 @@
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <NoWarn>CA1034,CA1515</NoWarn>
+    <OutputType>exe</OutputType>
   </PropertyGroup>
 
   <ItemGroup>
