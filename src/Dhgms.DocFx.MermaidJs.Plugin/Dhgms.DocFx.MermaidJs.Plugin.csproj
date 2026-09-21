@@ -8,6 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Whipstaff.Markdig" Version="9.2.28" />
+    <PackageReference Include="Whipstaff.Markdig" Version="9.2.66" />
   </ItemGroup>
 </Project>
